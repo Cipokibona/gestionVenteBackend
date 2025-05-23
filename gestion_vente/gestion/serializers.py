@@ -7,21 +7,26 @@ class TauxEchangeSerializer(ModelSerializer):
     
     class Meta:
         model = TauxEchange
-        fields = ['devise','taux','date_start','date_end','is_active']
+        fields = ['id','devise','taux','date_start','date_end','is_active']
 
 
 class WalletSerializer(ModelSerializer):
+    wallet_name = SerializerMethodField()
     
     class Meta:
         model = Wallet
-        fields = ['user','typeEchange','montant','bordereau','is_active','date']
+        fields = ['id','user','typeEchange','wallet_name','montant','bordereau','is_active','date']
+        
+    def get_wallet_name(self, obj):
+        queryset = obj.typeEchange
+        return queryset.nom 
 
 
 class TypeEchangeSerializer(ModelSerializer):
     
     class Meta:
         model = TypeEchange
-        fields = ['nom','description','is_bordereau','is_devise','is_active','date']
+        fields = ['id','nom','description','is_bordereau','is_devise','is_active','date']
 
 
 class userSerializer(ModelSerializer):
