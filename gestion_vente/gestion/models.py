@@ -21,14 +21,15 @@ class Wallet(models.Model):
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
     
-    def __str__(self):
-        return self.user
+    # def __str__(self):
+    #     return self.username
     
 class TauxEchange(models.Model):
     devise = models.ForeignKey(TypeEchange, on_delete=models.CASCADE, related_name='devise_type')
     taux = models.FloatField()
     date_start = models.DateTimeField(auto_now_add=True)
     date_end = models.DateTimeField()
+    is_active = models.BooleanField(default=True)
     
     def __str__(self):
         return self.devise

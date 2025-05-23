@@ -6,7 +6,7 @@ from .serializers import userSerializer
 
 class UserAPIView(ModelViewSet):
     serializer_class = userSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return User.objects.all()
