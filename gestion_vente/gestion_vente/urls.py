@@ -16,13 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from gestion.views import UserAPIView
+from gestion.views import UserAPIView, TypeEchangeView, WalletView, TauxEchangeView
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 router = routers.SimpleRouter()
 
 router.register('users', UserAPIView, basename='users')
+router.register('typeEchange', TypeEchangeView, basename='type_echange')
+router.register('wallet', WalletView, basename='wallet')
+router.register('tauxEchange', TauxEchangeView, basename='taux_echange')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
