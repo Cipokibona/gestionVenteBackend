@@ -129,3 +129,16 @@ class ListWalletVente(models.Model):
     montant = models.FloatField()
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
+    
+    
+class Transaction(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_transaction')
+    walletSource = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='wallet_source')
+    walletCible = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='wallet_cible')
+    montant = models.FloatField()
+    bordereau = models.CharField(max_length=100, null=True)
+    is_delivered = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
+    date_delivered = models.DateTimeField()
+    

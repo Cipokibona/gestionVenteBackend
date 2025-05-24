@@ -1,7 +1,13 @@
 from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
 from authentification.models import User
-from gestion.models import TypeEchange, Wallet, TauxEchange
+from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction
 
+
+class TransactionSerializer(ModelSerializer):
+    
+    class Meta:
+        model = Transaction
+        fields = ['id','author','walletSource','walletCible','montant','bordereau','is_delivered','is_active','date','date_delivered']
 
 class TauxEchangeSerializer(ModelSerializer):
     

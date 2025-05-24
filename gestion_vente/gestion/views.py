@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from authentification.models import User
-from gestion.models import TypeEchange, Wallet, TauxEchange
+from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from .serializers import userSerializer, TauxEchangeSerializer, WalletSerializer, TypeEchangeSerializer
+from .serializers import userSerializer, TauxEchangeSerializer, WalletSerializer, TypeEchangeSerializer, TransactionSerializer
 
 class UserAPIView(ModelViewSet):
     serializer_class = userSerializer
@@ -32,3 +32,10 @@ class TypeEchangeView(ModelViewSet):
     
     def get_queryset(self):
         return TypeEchange.objects.all()
+    
+    
+class TransactionsView(ModelViewSet):
+    serializer_class = TransactionSerializer
+    
+    def get_queryset(self):
+        return Transaction.objects.all()

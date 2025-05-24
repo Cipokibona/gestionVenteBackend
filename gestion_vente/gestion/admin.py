@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Wallet, TauxEchange, TypeEchange, Product, Distributeur, Client, PointOfSell, AchatProduct, ListProductAchat,  ListWalletAchat, VenteProduct, ListProductVente, ListWalletVente
+from .models import Wallet, TauxEchange, TypeEchange, Product, Distributeur, Client, PointOfSell, AchatProduct, ListProductAchat,  ListWalletAchat, VenteProduct, ListProductVente, ListWalletVente, Transaction
 
 @admin.register(TypeEchange)
 class CustomTypeEchangeAdmin(admin.ModelAdmin):
@@ -56,3 +56,7 @@ class ListProductVenteAdmin(admin.ModelAdmin):
 @admin.register(ListWalletVente)
 class ListProductVenteAdmin(admin.ModelAdmin):
     list_display = ['vente','wallet','montant','is_active','date']
+    
+@admin.register(Transaction)
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = ['author','walletSource','walletCible','montant','bordereau','is_delivered','is_active','date','date_delivered']
