@@ -25,8 +25,36 @@ class WalletSerializer(ModelSerializer):
         
     def get_wallet_name(self, obj):
         queryset = obj.typeEchange
-        return queryset.nom 
-
+        return queryset.nom
+    
+    def create(self, validated_data):
+        typeEchange = TypeEchange.objects.get(nom = validated_data['typeEchange'])
+        # sourceWallet = Wallet.objects.get(id = validated_data['walletSource'])
+        
+        if (typeEchange.is_bordereau):
+            newWallet = Wallet(
+                user = validated_data['user'],
+                typeEchange = validated_data['typeEchange'],
+                montant = validated_data['montant'],
+                bordereau = validated_data['bordereau']
+                )
+            newWallet.save()
+            # sourceWallet.montant = sourceWallet.montant - validated_data['montant']
+            # sourceWallet.save()
+            
+            return newWallet
+        else:
+            wallet = Wallet.objects.get(typeEchange = typeEchange)
+            wallet.montant = wallet.montant + validated_data['montant']
+            wallet.save()
+            
+            return wallet
+        
+    def update(self, instance, validated_data):
+        if(instance.montant > validated_data['montant']):
+            instance.montant = instance.montant - validated_data['montant']
+            instance.save()
+        return instance
 
 class TypeEchangeSerializer(ModelSerializer):
     

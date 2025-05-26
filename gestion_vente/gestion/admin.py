@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Wallet, TauxEchange, TypeEchange, Product, Distributeur, Client, PointOfSell, AchatProduct, ListProductAchat,  ListWalletAchat, VenteProduct, ListProductVente, ListWalletVente, Transaction
+from .models import Wallet, TauxEchange, TypeEchange, Products, Distributeur, Customer, PointVente, BuyProduct, AllProductAchat,  AllWalletBuy, SellProduct, AllProductVente, AllWalletVente, Transaction
 
 @admin.register(TypeEchange)
 class CustomTypeEchangeAdmin(admin.ModelAdmin):
@@ -17,7 +17,7 @@ class CustomWalletAdmin(admin.ModelAdmin):
 class TauxEchangeAdmin(admin.ModelAdmin):
     list_display = ['devise','taux','date_start','date_end','is_active']
     
-@admin.register(Product)
+@admin.register(Products)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['name','is_active','date']
 
@@ -25,35 +25,35 @@ class ProductAdmin(admin.ModelAdmin):
 class DistributeurAdmin(admin.ModelAdmin):
     list_display = ['name','adress','tel','is_active','date']
     
-@admin.register(Client)
+@admin.register(Customer)
 class ClientAdmin(admin.ModelAdmin):
     list_display = ['respo','fullName','adress','tel','is_active','date']
     
-@admin.register(PointOfSell)
+@admin.register(PointVente)
 class POSAdmin(admin.ModelAdmin):
     list_display = ['respo','fullName','adress','tel','is_active','date']
 
-@admin.register(AchatProduct)
+@admin.register(BuyProduct)
 class AchatProductAdmin(admin.ModelAdmin):
     list_display = ['author','distributeur','depot','montantPaye','is_active','date']
     
-@admin.register(ListProductAchat)
+@admin.register(AllProductAchat)
 class ListProductAchatAdmin(admin.ModelAdmin):
     list_display = ['product','achat','quantity','pricePerUnitOfficiel','pricePerUnitReel','is_active','date']
     
-@admin.register(ListWalletAchat)
+@admin.register(AllWalletBuy)
 class ListWalletAchatAdmin(admin.ModelAdmin):
-    list_display = ['achat','wallet','montant','is_active','date']
+    list_display = ['buy','wallet','montant','is_active','date']
     
-@admin.register(VenteProduct)
+@admin.register(SellProduct)
 class VenteAdmin(admin.ModelAdmin):
     list_display = ['author','client','depot','montantPaye','is_active','date']
     
-@admin.register(ListProductVente)
+@admin.register(AllProductVente)
 class ListProductVenteAdmin(admin.ModelAdmin):
     list_display = ['product','vente','quantity','pricePerUnitOfficiel','pricePerUnitReel','is_active','date']
     
-@admin.register(ListWalletVente)
+@admin.register(AllWalletVente)
 class ListProductVenteAdmin(admin.ModelAdmin):
     list_display = ['vente','wallet','montant','is_active','date']
     
