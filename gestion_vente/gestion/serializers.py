@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
 from authentification.models import User
-from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction
+from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, Products, BasketAgent, BasketListProducts, WalletTypeBasket
 
 
 class TransactionSerializer(ModelSerializer):
@@ -8,6 +8,18 @@ class TransactionSerializer(ModelSerializer):
     class Meta:
         model = Transaction
         fields = ['id','author','walletSource','walletCible','montant','bordereau','is_delivered','is_active','date','date_delivered']
+        
+    def create(self, validated_data):
+        transaction = Transaction(
+            author = validated_data['author'],
+            walletSource = validated_data['walletSource'],
+            walletCible = validated_data['walletCible'],
+            montant = validated_data['montant'],
+            bordereau = validated_data['bordereau'],
+            is_delivered = validated_data['is_delivered'],
+            )
+        transaction.save()
+        return transaction
 
 class TauxEchangeSerializer(ModelSerializer):
     
@@ -73,4 +85,55 @@ class userSerializer(ModelSerializer):
     def get_wallet_user(self, obj):
         queryset = obj.wallet_user.filter(is_active=True)
         serializer = WalletSerializer(queryset, many=True, required=False)
+        return serializer.data
+    
+class ProductSerializer(ModelSerializer):
+    
+    class Meta:
+        model = Products
+        fields = ['id','name','is_active']
+        
+class BasketListProductSerializer(ModelSerializer):
+    product_name = SerializerMethodField()
+    
+    class Meta:
+        model = BasketListProducts
+        fields = ['id','basket','product','product_name','quantity','pricePerUnitOfficiel','date_expiration','is_active','date']
+        
+    def get_product_name(self, obj):
+        queryset = obj.product
+        return queryset.name
+    
+class WalletTypeBasketSerializer(ModelSerializer):
+    type_echange_name = SerializerMethodField()
+    
+    class Meta:
+        model = WalletTypeBasket
+        fields = ['id','basket','typeEchange','type_echange_name','montant','is_active','date']
+        
+    def get_type_echange_name(self, obj):
+        queryset = obj.typeEchange
+        return queryset.nom
+
+class BasketForAgentSerializer(ModelSerializer):
+    list_product = SerializerMethodField()
+    depot_name = SerializerMethodField()
+    wallet_basket = SerializerMethodField()
+    
+    class Meta:
+        model = BasketAgent
+        fields = ['id','agent','depot','depot_name','list_product','wallet_basket','is_active','date']
+        
+    def get_list_product(self, obj):
+        queryset = obj.thisproduct_for_basket.filter(is_active = True)
+        serializer = BasketListProductSerializer(queryset, many=True, required=False)
+        return serializer.data
+    
+    def get_depot_name(self, obj):
+        queryset = obj.depot
+        return queryset.fullName
+    
+    def get_wallet_basket(self, obj):
+        queryset = obj.basket_user
+        serializer = WalletTypeBasketSerializer(queryset, many=True, required=False)
         return serializer.data
