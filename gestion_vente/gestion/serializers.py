@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
 from authentification.models import User
-from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, Products, BasketAgent, BasketListProducts, WalletTypeBasket
+from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer
 
 
 class TransactionSerializer(ModelSerializer):
@@ -137,3 +137,10 @@ class BasketForAgentSerializer(ModelSerializer):
         queryset = obj.basket_user
         serializer = WalletTypeBasketSerializer(queryset, many=True, required=False)
         return serializer.data
+    
+class CustomerSerializer(ModelSerializer):
+    
+    class Meta:
+        model = Customer
+        fields = ['id','respo','fullName','adress','tel','is_active','date']
+        

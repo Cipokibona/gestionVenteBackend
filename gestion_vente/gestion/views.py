@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from authentification.models import User
-from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, BasketListProducts, BasketAgent
+from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, BasketListProducts, BasketAgent, Customer
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from .serializers import userSerializer, TauxEchangeSerializer, WalletSerializer, TypeEchangeSerializer, TransactionSerializer, BasketForAgentSerializer, BasketListProductSerializer
+from .serializers import userSerializer, TauxEchangeSerializer, WalletSerializer, TypeEchangeSerializer, TransactionSerializer, BasketForAgentSerializer, BasketListProductSerializer, CustomerSerializer
 
 class UserAPIView(ModelViewSet):
     serializer_class = userSerializer
@@ -50,4 +50,10 @@ class BasketForAgentView(ModelViewSet):
     serializer_class = BasketForAgentSerializer
     
     def get_queryset(self):
-        return BasketAgent.objects.all()
+        return BasketAgent.objects.filter(is_active = True)
+    
+class CustomerView(ModelViewSet):
+    serializer_class = CustomerSerializer
+    
+    def get_queryset(self):
+        return Customer.objects.all()
