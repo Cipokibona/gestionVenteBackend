@@ -119,6 +119,13 @@ class BasketAgent(models.Model):
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
     
+class Vente(models.Model):
+    client = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='client_vente')
+    panier = models.ForeignKey(BasketAgent, on_delete=models.CASCADE, related_name='panier_vente')
+    reste = models.FloatField()
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
+    
      
 class BasketListProducts(models.Model):
     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='product_for_agent')
@@ -133,6 +140,26 @@ class WalletTypeBasket(models.Model):
     basket = models.ForeignKey(BasketAgent, on_delete=models.CASCADE, related_name='basket_user')
     typeEchange = models.ForeignKey(TypeEchange, on_delete=models.CASCADE, related_name='type_echange_basket')
     montant = models.FloatField()
+    bordereau = models.CharField(max_length=100, null=True)
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
+    
+    
+class ListProductVente(models.Model):
+    vente = models.ForeignKey(Vente, on_delete=models.CASCADE, related_name='list_vente')
+    product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='product_vente')
+    quantity = models.IntegerField()
+    pricePerUnitOfficiel = models.FloatField()
+    pricePerUnitClient = models.FloatField()
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
+    
+
+class TypeEchangeVente(models.Model):
+    typeEchange = models.ForeignKey(TypeEchange, on_delete=models.CASCADE, related_name='vente_money_echange')
+    vente = models.ForeignKey(Vente, on_delete=models.CASCADE, related_name='type_on_vente')
+    montant = models.FloatField()
+    bordereau =  models.CharField(max_length=100, null=True)
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
 

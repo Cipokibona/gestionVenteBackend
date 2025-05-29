@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Wallet, TauxEchange, TypeEchange, Products, Distributeur, Customer, PointVente, BuyProduct, AllProductAchat,  AllWalletBuy, SellProduct, AllProductVente, AllWalletVente, Transaction, BasketAgent, BasketListProducts, WalletTypeBasket
+from .models import Wallet, TauxEchange, TypeEchange, Products, Distributeur, Customer, PointVente, BuyProduct, AllProductAchat,  AllWalletBuy, SellProduct, AllProductVente, AllWalletVente, Transaction, BasketAgent, BasketListProducts, WalletTypeBasket, Vente, ListProductVente, TypeEchangeVente
 
 @admin.register(TypeEchange)
 class CustomTypeEchangeAdmin(admin.ModelAdmin):
@@ -72,3 +72,15 @@ class BasketProductAdmin(admin.ModelAdmin):
 @admin.register(WalletTypeBasket)
 class WalletUserPosAdmin(admin.ModelAdmin):
     list_display = ['basket','typeEchange','montant','is_active','date']
+    
+@admin.register(Vente)
+class VenteAdmin(admin.ModelAdmin):
+    list_display = ['client','panier','reste','is_active','date']
+    
+@admin.register(ListProductVente)
+class ListProductVenteAdmin(admin.ModelAdmin):
+    list_display = ['vente','product','quantity','pricePerUnitOfficiel','pricePerUnitClient','is_active','date']
+    
+@admin.register(TypeEchangeVente)
+class TypeEchangeVenteAdmin(admin.ModelAdmin):
+    list_display = ['typeEchange','vente','montant','bordereau','is_active','date']
