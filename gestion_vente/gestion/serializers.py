@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
 from authentification.models import User
-from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer
+from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente
 
 
 class TransactionSerializer(ModelSerializer):
@@ -144,3 +144,32 @@ class CustomerSerializer(ModelSerializer):
         model = Customer
         fields = ['id','respo','fullName','adress','tel','is_active','date']
         
+class ListProductVenteSerializer(ModelSerializer):
+    
+    class Meta:
+        model = ListProductVente
+        fields = ['id','vente','product','quantity','pricePerUnitOfficiel','pricePerUnitClient','is_active','date']
+
+class TypeEchangeVenteSerializer(ModelSerializer):
+    
+    class Meta:
+        model = TypeEchangeVente
+        fields = ['id','typeEchange','vente','montant','bordereau','is_active','date']
+
+class VenteSerializer(ModelSerializer):
+    product_list = SerializerMethodField()
+    typeEchange_list = SerializerMethodField()
+    
+    class Meta:
+        model = Vente
+        fields = ['id','client','panier','product_list','typeEchange_list','reste','is_active','date']
+        
+    def get_product_list(self, obj):
+        queryset = obj.list_vente.filter(is_active = True)
+        serializer = ListProductVenteSerializer(queryset, many=True, required=False)
+        return serializer.data
+        
+    def get_typeEchange_list(self, obj):
+        queryset = obj.type_on_vente.filter(is_active = True)
+        serializer = TypeEchangeVenteSerializer(queryset, many=True, required=False)
+        return serializer.data
