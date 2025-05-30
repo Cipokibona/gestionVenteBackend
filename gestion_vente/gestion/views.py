@@ -62,7 +62,7 @@ class VenteView(ModelViewSet):
     serializer_class = VenteSerializer
     
     def get_queryset(self):
-        return Vente.objects.filter(is_active = True)
+        return Vente.objects.filter(is_active = True).order_by('-date')
     
 class ListProductVenteView(ModelViewSet):
     serializer_class = ListProductVenteSerializer
