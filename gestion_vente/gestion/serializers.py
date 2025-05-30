@@ -145,24 +145,37 @@ class CustomerSerializer(ModelSerializer):
         fields = ['id','respo','fullName','adress','tel','is_active','date']
         
 class ListProductVenteSerializer(ModelSerializer):
+    product_name = SerializerMethodField()
     
     class Meta:
         model = ListProductVente
-        fields = ['id','vente','product','quantity','pricePerUnitOfficiel','pricePerUnitClient','is_active','date']
+        fields = ['id','vente','product','product_name','quantity','pricePerUnitOfficiel','pricePerUnitClient','is_active','date']
+        
+    def get_product_name(self, obj):
+        queryset = obj.product
+        return queryset.name
 
 class TypeEchangeVenteSerializer(ModelSerializer):
+    typeEchange_name = SerializerMethodField()
     
     class Meta:
         model = TypeEchangeVente
-        fields = ['id','typeEchange','vente','montant','bordereau','is_active','date']
+        fields = ['id','typeEchange','typeEchange_name','vente','montant','bordereau','is_active','date']
+        
+    def get_typeEchange_name(self, obj):
+        queryset = obj.typeEchange
+        return queryset.nom
 
 class VenteSerializer(ModelSerializer):
     product_list = SerializerMethodField()
     typeEchange_list = SerializerMethodField()
+    client_name = SerializerMethodField()
+    agent_name = SerializerMethodField()
+    pos_name = SerializerMethodField()
     
     class Meta:
         model = Vente
-        fields = ['id','client','panier','product_list','typeEchange_list','reste','date_recouvrement','is_active','date']
+        fields = ['id','client','client_name','panier','agent_name','pos_name','product_list','typeEchange_list','reste','date_recouvrement','is_active','date']
         
     def get_product_list(self, obj):
         queryset = obj.list_vente.filter(is_active = True)
@@ -174,27 +187,19 @@ class VenteSerializer(ModelSerializer):
         serializer = TypeEchangeVenteSerializer(queryset, many=True)
         return serializer.data
     
+    def get_client_name(self, obj):
+        queryset = obj.client
+        return queryset.fullName
+    
+    def get_agent_name(self, obj):
+        queryset = obj.panier
+        return queryset.agent.username
+    
+    def get_pos_name(self, obj):
+        queryset = obj.panier
+        return queryset.depot.fullName
+        
+    
     def create(self, validated_data):
-        # product_data = validated_data.pop('product_list', [])
-        # typeEchange_data = validated_data.pop('typeEchange_list', [])
-        
-        vente = Vente.objects.create(**validated_data)
-        
-        # print("Valeurs de validated_data:", validated_data)
-        # print("Valeurs de product_data:", product_data)
-        
-        # for product in product_data:
-        #     list_product_instance = ListProductVente(
-        #         vente = vente,
-        #         product_id = product['id'],
-        #         quantity = product['quantity'],
-        #         pricePerUnitOfficiel = product['prixOfficiel'],
-        #         pricePerUnitClient = product['prixClient'],
-        #     )
-        #     list_product_instance.save()
-
-        # for type_echange in typeEchange_data:
-        #     type_echange_instance = TypeEchange.objects.create(**type_echange)
-        #     vente.type_on_vente.add(type_echange_instance)
-            
+        vente = Vente.objects.create(**validated_data)  
         return vente
