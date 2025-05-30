@@ -162,14 +162,39 @@ class VenteSerializer(ModelSerializer):
     
     class Meta:
         model = Vente
-        fields = ['id','client','panier','product_list','typeEchange_list','reste','is_active','date']
+        fields = ['id','client','panier','product_list','typeEchange_list','reste','date_recouvrement','is_active','date']
         
     def get_product_list(self, obj):
         queryset = obj.list_vente.filter(is_active = True)
-        serializer = ListProductVenteSerializer(queryset, many=True, required=False)
+        serializer = ListProductVenteSerializer(queryset, many=True)
         return serializer.data
         
     def get_typeEchange_list(self, obj):
         queryset = obj.type_on_vente.filter(is_active = True)
-        serializer = TypeEchangeVenteSerializer(queryset, many=True, required=False)
+        serializer = TypeEchangeVenteSerializer(queryset, many=True)
         return serializer.data
+    
+    def create(self, validated_data):
+        # product_data = validated_data.pop('product_list', [])
+        # typeEchange_data = validated_data.pop('typeEchange_list', [])
+        
+        vente = Vente.objects.create(**validated_data)
+        
+        # print("Valeurs de validated_data:", validated_data)
+        # print("Valeurs de product_data:", product_data)
+        
+        # for product in product_data:
+        #     list_product_instance = ListProductVente(
+        #         vente = vente,
+        #         product_id = product['id'],
+        #         quantity = product['quantity'],
+        #         pricePerUnitOfficiel = product['prixOfficiel'],
+        #         pricePerUnitClient = product['prixClient'],
+        #     )
+        #     list_product_instance.save()
+
+        # for type_echange in typeEchange_data:
+        #     type_echange_instance = TypeEchange.objects.create(**type_echange)
+        #     vente.type_on_vente.add(type_echange_instance)
+            
+        return vente

@@ -123,6 +123,7 @@ class Vente(models.Model):
     client = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='client_vente')
     panier = models.ForeignKey(BasketAgent, on_delete=models.CASCADE, related_name='panier_vente')
     reste = models.FloatField()
+    date_recouvrement = models.DateTimeField()
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
     

@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from authentification.models import User
 from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, BasketListProducts, BasketAgent, Customer, ListProductVente, TypeEchangeVente, Vente
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from .serializers import userSerializer, TauxEchangeSerializer, WalletSerializer, TypeEchangeSerializer, TransactionSerializer, BasketForAgentSerializer, BasketListProductSerializer, CustomerSerializer, VenteSerializer
+from .serializers import userSerializer, TauxEchangeSerializer, WalletSerializer, TypeEchangeSerializer, TransactionSerializer, BasketForAgentSerializer, BasketListProductSerializer, CustomerSerializer, VenteSerializer, ListProductVenteSerializer, TypeEchangeVenteSerializer
 
 class UserAPIView(ModelViewSet):
     serializer_class = userSerializer
@@ -63,3 +63,15 @@ class VenteView(ModelViewSet):
     
     def get_queryset(self):
         return Vente.objects.filter(is_active = True)
+    
+class ListProductVenteView(ModelViewSet):
+    serializer_class = ListProductVenteSerializer
+    
+    def get_queryset(self):
+        return ListProductVente.objects.filter(is_active = True)
+    
+class TypeEchangeVenteView(ModelViewSet):
+    serializer_class = TypeEchangeVenteSerializer
+    
+    def get_queryset(self):
+        return TypeEchangeVente.objects.filter(is_active = True)

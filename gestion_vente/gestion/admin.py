@@ -75,7 +75,7 @@ class WalletUserPosAdmin(admin.ModelAdmin):
     
 @admin.register(Vente)
 class VenteAdmin(admin.ModelAdmin):
-    list_display = ['client','panier','reste','is_active','date']
+    list_display = ['client','panier','reste','date_recouvrement','is_active','date']
     
 @admin.register(ListProductVente)
 class ListProductVenteAdmin(admin.ModelAdmin):
