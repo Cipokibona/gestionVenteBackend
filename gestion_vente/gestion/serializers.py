@@ -1,3 +1,5 @@
+from django.utils import timezone
+from rest_framework.exceptions import NotFound
 from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
 from authentification.models import User
 from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste
@@ -28,8 +30,13 @@ class TauxEchangeSerializer(ModelSerializer):
         fields = ['id','devise','taux','date_start','date_end','is_active']
         
     def create(self, validated_data):
-        taux = TauxEchange.objects.get(devise = validated_data['devise'], is_active = True)
-        taux.is_active = False
+        taux = TauxEchange.objects.filter(devise=validated_data['devise'], is_active=True).first()
+        
+        if taux:
+            taux.is_active = False
+            taux.date_end = timezone.now()
+            taux.save()
+        
         new_taux = TauxEchange.objects.create(**validated_data)
         return new_taux
 
@@ -87,7 +94,11 @@ class TypeEchangeSerializer(ModelSerializer):
         return serializer.data
     
     def update(self, instance, validated_data):
-        instance.save(**validated_data)
+        instance.nom = validated_data['nom']
+        instance.description = validated_data['description']
+        instance.is_bordereau = validated_data['is_bordereau']
+        instance.is_devise = validated_data['is_devise']
+        instance.save()
         return instance
     
     def create(self, validated_data):
