@@ -10,7 +10,7 @@ class CustomTypeEchangeAdmin(admin.ModelAdmin):
     
 @admin.register(Wallet)
 class CustomWalletAdmin(admin.ModelAdmin):
-    list_display = ['user','typeEchange','montant','bordereau','is_active','date']
+    list_display = ['user','typeEchange','montant','is_active','date']
     search_fields = ('user','typeEchange',)
     
 @admin.register(TauxEchange)

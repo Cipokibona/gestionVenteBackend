@@ -39,7 +39,7 @@ class WalletSerializer(ModelSerializer):
     
     class Meta:
         model = Wallet
-        fields = ['id','user','typeEchange','wallet_name','montant','bordereau','is_active','date']
+        fields = ['id','user','typeEchange','wallet_name','montant','is_active','date']
         
     def get_wallet_name(self, obj):
         queryset = obj.typeEchange
@@ -117,6 +117,31 @@ class userSerializer(ModelSerializer):
         queryset = obj.wallet_user.filter(is_active=True)
         serializer = WalletSerializer(queryset, many=True, required=False)
         return serializer.data
+    
+    def create(self, validated_data):
+        user = User(
+          first_name = validated_data['first_name'],
+          last_name = validated_data['last_name'],
+          tel = validated_data['tel'],
+          imgProfil = validated_data['imgProfil'],
+          is_agent_commercial = validated_data['is_agent_commercial'],
+          is_staff = validated_data['is_staff'],
+          is_admin = validated_data['is_admin'],
+          is_respo_pos = validated_data['is_respo_pos']
+        )
+        user.save()
+        
+        type_echanges = TypeEchange.objects.all()
+        
+        for type_echange in type_echanges:
+            new_wallet = Wallet(
+                user = user,
+                typeEchange = type_echange,
+                montant = 0,
+            )
+            new_wallet.save()
+        
+        return user
     
 class ProductSerializer(ModelSerializer):
     
