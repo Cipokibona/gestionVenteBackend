@@ -26,6 +26,12 @@ class TauxEchangeSerializer(ModelSerializer):
     class Meta:
         model = TauxEchange
         fields = ['id','devise','taux','date_start','date_end','is_active']
+        
+    def create(self, validated_data):
+        taux = TauxEchange.objects.get(devise = validated_data['devise'], is_active = True)
+        taux.is_active = False
+        new_taux = TauxEchange.objects.create(**validated_data)
+        return new_taux
 
 
 class WalletSerializer(ModelSerializer):
@@ -69,10 +75,35 @@ class WalletSerializer(ModelSerializer):
         return instance
 
 class TypeEchangeSerializer(ModelSerializer):
+    taux_echange = SerializerMethodField()
     
     class Meta:
         model = TypeEchange
-        fields = ['id','nom','description','is_bordereau','is_devise','is_active','date']
+        fields = ['id','nom','description','is_bordereau','is_devise','taux_echange','is_active','date']
+        
+    def get_taux_echange(self, obj):
+        queryset = obj.devise_type.filter(is_active = True)
+        serializer = TauxEchangeSerializer(queryset, many=True, required=False)
+        return serializer.data
+    
+    def update(self, instance, validated_data):
+        instance.save(**validated_data)
+        return instance
+    
+    def create(self, validated_data):
+        type_echange = TypeEchange.objects.create(**validated_data)
+        
+        users = User.objects.all()
+        
+        for user in users:
+            new_wallet_user = Wallet(
+                user = user,
+                typeEchange = type_echange,
+                montant = 0,
+            )
+            new_wallet_user.save()
+            
+        return type_echange
 
 
 class userSerializer(ModelSerializer):
@@ -210,3 +241,9 @@ class PosteSerializer(ModelSerializer):
     class Meta:
         model = Poste
         fields = ['id','name','salar','is_active']
+        
+    def update(self, instance, validated_data):
+        instance.name = validated_data['name']
+        instance.salar = validated_data['salar']
+        instance.save()
+        return instance

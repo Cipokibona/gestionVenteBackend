@@ -17,7 +17,7 @@ class Wallet(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wallet_user')
     typeEchange = models.ForeignKey(TypeEchange, on_delete=models.CASCADE, related_name='wallet_type')
     montant = models.FloatField()
-    bordereau = models.CharField(max_length=100, null=True)
+    # bordereau = models.CharField(max_length=100, null=True)
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
     
@@ -26,7 +26,7 @@ class TauxEchange(models.Model):
     devise = models.ForeignKey(TypeEchange, on_delete=models.CASCADE, related_name='devise_type')
     taux = models.FloatField()
     date_start = models.DateTimeField(auto_now_add=True)
-    date_end = models.DateTimeField()
+    date_end = models.DateTimeField(null=True)
     is_active = models.BooleanField(default=True)
     
     def __str__(self):
