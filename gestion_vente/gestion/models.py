@@ -193,4 +193,10 @@ class AllWalletVente(models.Model):
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
     
+
+class Poste(models.Model):
+    name = models.CharField(max_length=100)
+    salar = models.FloatField()
+    is_active = models.BooleanField(default=True)
+    
     

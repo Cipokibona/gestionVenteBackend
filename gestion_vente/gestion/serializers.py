@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
 from authentification.models import User
-from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente
+from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste
 
 
 class TransactionSerializer(ModelSerializer):
@@ -203,3 +203,10 @@ class VenteSerializer(ModelSerializer):
     def create(self, validated_data):
         vente = Vente.objects.create(**validated_data)  
         return vente
+    
+
+class PosteSerializer(ModelSerializer):
+    
+    class Meta:
+        model = Poste
+        fields = ['id','name','salar','is_active']
