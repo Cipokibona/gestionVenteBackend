@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from gestion.views import UserAPIView, TypeEchangeView, TauxEchangeView, BasketListView, CustomerView, VenteView, ListProductVenteView, TypeEchangeVenteView, PosteView, BasketAgentView, SalarUserView, DistributeurView, ProductView
+from gestion.views import UserAPIView, TypeEchangeView, TauxEchangeView, BasketListView, CustomerView, VenteView, ListProductVenteView, TypeEchangeVenteView, PosteView, BasketAgentView, SalarUserView, DistributeurView, ProductView, PointVenteView, RespoPosView
 # , WalletView, TransactionsView, BasketForAgentView
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -25,9 +25,9 @@ router = routers.SimpleRouter()
 
 router.register('users', UserAPIView, basename='users')
 router.register('typeEchange', TypeEchangeView, basename='type_echange')
-# router.register('wallet', WalletView, basename='wallet')
+router.register('pointVente', PointVenteView, basename='point_vente')
 router.register('tauxEchange', TauxEchangeView, basename='taux_echange')
-# router.register('transactions', TransactionsView, basename='transactions')
+router.register('respoPos', RespoPosView, basename='responsable_pos')
 router.register('basketAgent', BasketAgentView, basename='basketAgent')
 router.register('listProductBasket', BasketListView, basename='list_product_basket')
 router.register('customers', CustomerView, basename='customers')

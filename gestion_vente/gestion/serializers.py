@@ -2,7 +2,7 @@ from django.utils import timezone
 from rest_framework.exceptions import NotFound
 from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
 from authentification.models import User
-from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur
+from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente
 
 
 # class TransactionSerializer(ModelSerializer):
@@ -314,6 +314,29 @@ class PosteSerializer(ModelSerializer):
         instance.salar = validated_data['salar']
         instance.save()
         return instance
+    
+class ResponsablePosSerializer(ModelSerializer):
+    respo_name = SerializerMethodField()
+    
+    class Meta:
+        model = ResponsablePos
+        fields = ['id','respo','respo_name','pos','is_active','date']
+        
+    def get_respo_name(self, obj):
+        queryset = obj.respo
+        return queryset.username
+    
+class PointVenteSerializer(ModelSerializer):
+    list_respo = SerializerMethodField()
+    
+    class Meta:
+        model = PointVente
+        fields = ['id','fullName','adress','tel','list_respo','is_active','date']
+        
+    def get_list_respo(self, obj):
+        queryset = obj.son_POS.filter(is_active = True)
+        serializer = ResponsablePosSerializer(queryset, many=True)
+        return serializer.data
         
     
 class userSerializer(ModelSerializer):
