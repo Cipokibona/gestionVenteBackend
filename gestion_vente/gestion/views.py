@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from authentification.models import User
-from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, BasketListProducts, BasketAgent, Customer, ListProductVente, TypeEchangeVente, Vente, Poste
+from gestion.models import TypeEchange,  TauxEchange,BasketListProducts, BasketAgent, Customer, ListProductVente, TypeEchangeVente, Vente, Poste
+# , Wallet, Transaction
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from .serializers import userSerializer, TauxEchangeSerializer, WalletSerializer, TypeEchangeSerializer, TransactionSerializer, BasketForAgentSerializer, BasketListProductSerializer, CustomerSerializer, VenteSerializer, ListProductVenteSerializer, TypeEchangeVenteSerializer, PosteSerializer
+from .serializers import userSerializer, TauxEchangeSerializer, TypeEchangeSerializer, BasketListProductSerializer, CustomerSerializer, VenteSerializer, ListProductVenteSerializer, TypeEchangeVenteSerializer, PosteSerializer
+# , TransactionSerializer, BasketForAgentSerializer, WalletSerializer
 
 class UserAPIView(ModelViewSet):
     serializer_class = userSerializer
@@ -20,11 +22,11 @@ class TauxEchangeView(ModelViewSet):
         return TauxEchange.objects.all()
     
 
-class WalletView(ModelViewSet):
-    serializer_class = WalletSerializer
+# class WalletView(ModelViewSet):
+#     serializer_class = WalletSerializer
     
-    def get_queryset(self):
-        return Wallet.objects.all()
+#     def get_queryset(self):
+#         return Wallet.objects.all()
     
     
 class TypeEchangeView(ModelViewSet):
@@ -34,11 +36,11 @@ class TypeEchangeView(ModelViewSet):
         return TypeEchange.objects.all()
     
     
-class TransactionsView(ModelViewSet):
-    serializer_class = TransactionSerializer
+# class TransactionsView(ModelViewSet):
+#     serializer_class = TransactionSerializer
     
-    def get_queryset(self):
-        return Transaction.objects.all()
+#     def get_queryset(self):
+#         return Transaction.objects.all()
     
 class BasketListView(ModelViewSet):
     serializer_class = BasketListProductSerializer
@@ -46,11 +48,11 @@ class BasketListView(ModelViewSet):
     def get_queryset(self):
         return BasketListProducts.objects.all()
     
-class BasketForAgentView(ModelViewSet):
-    serializer_class = BasketForAgentSerializer
+# class BasketForAgentView(ModelViewSet):
+#     serializer_class = BasketForAgentSerializer
     
-    def get_queryset(self):
-        return BasketAgent.objects.filter(is_active = True)
+#     def get_queryset(self):
+#         return BasketAgent.objects.filter(is_active = True)
     
 class CustomerView(ModelViewSet):
     serializer_class = CustomerSerializer
