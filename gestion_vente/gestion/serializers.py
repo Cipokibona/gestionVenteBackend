@@ -115,51 +115,15 @@ class TypeEchangeSerializer(ModelSerializer):
         #     new_wallet_user.save()
             
         return type_echange
-
-
-class userSerializer(ModelSerializer):
-    # wallet_user = SerializerMethodField()
     
-    class Meta:
-        model = User
-        fields = ['id','username','password','email','first_name','last_name','tel','email','imgProfil','is_agent_commercial','is_staff','is_admin','is_respo_pos','is_active']
-        
-    # def get_wallet_user(self, obj):
-    #     queryset = obj.wallet_user.filter(is_active=True)
-    #     serializer = WalletSerializer(queryset, many=True, required=False)
-    #     return serializer.data
-    
-    def create(self, validated_data):
-        user = User(
-          first_name = validated_data['first_name'],
-          last_name = validated_data['last_name'],
-          tel = validated_data['tel'],
-          imgProfil = validated_data['imgProfil'],
-          is_agent_commercial = validated_data['is_agent_commercial'],
-          is_staff = validated_data['is_staff'],
-          is_admin = validated_data['is_admin'],
-          is_respo_pos = validated_data['is_respo_pos']
-        )
-        user.save()
-        
-        # type_echanges = TypeEchange.objects.all()
-        
-        # for type_echange in type_echanges:
-        #     new_wallet = Wallet(
-        #         user = user,
-        #         typeEchange = type_echange,
-        #         montant = 0,
-        #     )
-        #     new_wallet.save()
-        
-        return user
     
 class ProductSerializer(ModelSerializer):
     
     class Meta:
         model = Products
         fields = ['id','name','is_active']
-        
+
+    
 class BasketListProductSerializer(ModelSerializer):
     product_name = SerializerMethodField()
     
@@ -204,7 +168,20 @@ class BasketListProductSerializer(ModelSerializer):
 #         queryset = obj.basket_user
 #         serializer = WalletTypeBasketSerializer(queryset, many=True, required=False)
 #         return serializer.data
+
+class BasketAgentSerializer(ModelSerializer):
+    list_product = SerializerMethodField()
     
+    class Meta:
+        model = BasketAgent
+        fields = ['id','agent','depot','list_product','is_active','date']
+        
+    def get_list_product(self, obj):
+        queryset = obj.thisproduct_for_basket.filter(is_active = True)
+        serializer = BasketListProductSerializer(queryset, many=True)
+        return serializer.data
+
+
 class CustomerSerializer(ModelSerializer):
     
     class Meta:
@@ -283,3 +260,41 @@ class PosteSerializer(ModelSerializer):
         instance.salar = validated_data['salar']
         instance.save()
         return instance
+    
+    
+class userSerializer(ModelSerializer):
+    # wallet_user = SerializerMethodField()
+    
+    class Meta:
+        model = User
+        fields = ['id','username','password','email','first_name','last_name','tel','email','imgProfil','is_agent_commercial','is_staff','is_admin','is_respo_pos','is_active']
+        
+    # def get_wallet_user(self, obj):
+    #     queryset = obj.wallet_user.filter(is_active=True)
+    #     serializer = WalletSerializer(queryset, many=True, required=False)
+    #     return serializer.data
+    
+    def create(self, validated_data):
+        user = User(
+          first_name = validated_data['first_name'],
+          last_name = validated_data['last_name'],
+          tel = validated_data['tel'],
+          imgProfil = validated_data['imgProfil'],
+          is_agent_commercial = validated_data['is_agent_commercial'],
+          is_staff = validated_data['is_staff'],
+          is_admin = validated_data['is_admin'],
+          is_respo_pos = validated_data['is_respo_pos']
+        )
+        user.save()
+        
+        # type_echanges = TypeEchange.objects.all()
+        
+        # for type_echange in type_echanges:
+        #     new_wallet = Wallet(
+        #         user = user,
+        #         typeEchange = type_echange,
+        #         montant = 0,
+        #     )
+        #     new_wallet.save()
+        
+        return user
