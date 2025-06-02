@@ -2,7 +2,7 @@ from django.utils import timezone
 from rest_framework.exceptions import NotFound
 from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
 from authentification.models import User
-from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos
+from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur
 
 
 # class TransactionSerializer(ModelSerializer):
@@ -122,11 +122,23 @@ class ProductSerializer(ModelSerializer):
     
     class Meta:
         model = Products
-        fields = ['id','distributeur','distributeur_name','name','is_active']
+        fields = ['id','distributeur','distributeur_name','name','description','is_active']
         
     def get_distributeur_name(self, obj):
         queryset = obj.distributeur
         return queryset.name
+    
+class DistributeurSerializer(ModelSerializer):
+    product_list = SerializerMethodField()
+    
+    class Meta:
+        model = Distributeur
+        fields = ['id','name','product_list','adress','tel','is_active','date']
+        
+    def get_product_list(self, obj):
+        queryset = obj.distributeur_product.filter(is_active = True)
+        serializer = ProductSerializer(queryset, many=True)
+        return serializer.data
 
     
 class BasketListProductSerializer(ModelSerializer):

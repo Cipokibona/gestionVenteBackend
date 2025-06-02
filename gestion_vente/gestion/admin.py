@@ -20,7 +20,7 @@ class TauxEchangeAdmin(admin.ModelAdmin):
     
 @admin.register(Products)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['distributeur','name','is_active','date']
+    list_display = ['distributeur','name','description','is_active','date']
 
 @admin.register(Distributeur)
 class DistributeurAdmin(admin.ModelAdmin):

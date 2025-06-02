@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from gestion.views import UserAPIView, TypeEchangeView, TauxEchangeView, BasketListView, CustomerView, VenteView, ListProductVenteView, TypeEchangeVenteView, PosteView, BasketAgentView, SalarUserView
+from gestion.views import UserAPIView, TypeEchangeView, TauxEchangeView, BasketListView, CustomerView, VenteView, ListProductVenteView, TypeEchangeVenteView, PosteView, BasketAgentView, SalarUserView, DistributeurView, ProductView
 # , WalletView, TransactionsView, BasketForAgentView
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -36,6 +36,8 @@ router.register('list_product_vente', ListProductVenteView, basename='list_produ
 router.register('list_pay_vente', TypeEchangeVenteView, basename='list_pay_vente')
 router.register('poste', PosteView, basename='poste')
 router.register('salaire', SalarUserView, basename='salaire')
+router.register('distributeur', DistributeurView, basename='distributeur')
+router.register('product', ProductView, basename='product')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -46,6 +46,7 @@ class Distributeur(models.Model):
 class Products(models.Model):
     distributeur = models.ForeignKey(Distributeur, on_delete=models.CASCADE, related_name='distributeur_product')
     name = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, null=True)
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
     
