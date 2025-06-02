@@ -2,7 +2,7 @@ from django.utils import timezone
 from rest_framework.exceptions import NotFound
 from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
 from authentification.models import User
-from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste
+from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos
 
 
 # class TransactionSerializer(ModelSerializer):
@@ -118,10 +118,15 @@ class TypeEchangeSerializer(ModelSerializer):
     
     
 class ProductSerializer(ModelSerializer):
+    distributeur_name = SerializerMethodField()
     
     class Meta:
         model = Products
-        fields = ['id','name','is_active']
+        fields = ['id','distributeur','distributeur_name','name','is_active']
+        
+    def get_distributeur_name(self, obj):
+        queryset = obj.distributeur
+        return queryset.name
 
     
 class BasketListProductSerializer(ModelSerializer):
@@ -169,18 +174,6 @@ class BasketListProductSerializer(ModelSerializer):
 #         serializer = WalletTypeBasketSerializer(queryset, many=True, required=False)
 #         return serializer.data
 
-class BasketAgentSerializer(ModelSerializer):
-    list_product = SerializerMethodField()
-    
-    class Meta:
-        model = BasketAgent
-        fields = ['id','agent','depot','list_product','is_active','date']
-        
-    def get_list_product(self, obj):
-        queryset = obj.thisproduct_for_basket.filter(is_active = True)
-        serializer = BasketListProductSerializer(queryset, many=True)
-        return serializer.data
-
 
 class CustomerSerializer(ModelSerializer):
     
@@ -215,11 +208,12 @@ class VenteSerializer(ModelSerializer):
     typeEchange_list = SerializerMethodField()
     client_name = SerializerMethodField()
     agent_name = SerializerMethodField()
+    agent_id = SerializerMethodField()
     pos_name = SerializerMethodField()
     
     class Meta:
         model = Vente
-        fields = ['id','client','client_name','panier','agent_name','pos_name','product_list','typeEchange_list','reste','date_recouvrement','is_active','date']
+        fields = ['id','client','client_name','panier','agent_id','agent_name','pos_name','product_list','typeEchange_list','reste','date_recouvrement','is_active','date']
         
     def get_product_list(self, obj):
         queryset = obj.list_vente.filter(is_active = True)
@@ -235,6 +229,10 @@ class VenteSerializer(ModelSerializer):
         queryset = obj.client
         return queryset.fullName
     
+    def get_agent_id(self, obj):
+        queryset = obj.panier
+        return queryset.agent.id
+    
     def get_agent_name(self, obj):
         queryset = obj.panier
         return queryset.agent.username
@@ -247,20 +245,64 @@ class VenteSerializer(ModelSerializer):
     def create(self, validated_data):
         vente = Vente.objects.create(**validated_data)  
         return vente
+        
+class BasketAgentSerializer(ModelSerializer):
+    list_product = SerializerMethodField()
+    depot_name = SerializerMethodField()
+    # basket_vente = SerializerMethodField()
     
+    class Meta:
+        model = BasketAgent
+        fields = ['id','agent','depot','depot_name','list_product','is_active','date']
+        
+    def get_list_product(self, obj):
+        queryset = obj.thisproduct_for_basket.filter(is_active = True)
+        serializer = BasketListProductSerializer(queryset, many=True)
+        return serializer.data
+    
+    def get_depot_name(self, obj):
+        queryset = obj.depot
+        return queryset.fullName
+    
+    # def get_basket_vente(self, obj):
+    #     queryset = obj.panier_vente.filter(is_active = True)
+    #     serializer = VenteSerializer(queryset, many=True)
+    #     return serializer.data
 
+class SalarUserSerializer(ModelSerializer):
+    montant_poste = SerializerMethodField()
+    post_name = SerializerMethodField()
+    
+    class Meta:
+        model = SalaireUser
+        fields = ['id','user','poste','post_name','montant_poste','is_active','date']
+        
+    def get_montant_poste(self, obj):
+        queryset = obj.poste
+        return queryset.salar
+    
+    def get_post_name(self, obj):
+        queryset = obj.poste
+        return queryset.name
+        
 class PosteSerializer(ModelSerializer):
+    post_user = SerializerMethodField()
     
     class Meta:
         model = Poste
-        fields = ['id','name','salar','is_active']
+        fields = ['id','name','post_user','salar','is_active']
+        
+    def get_post_user(self, obj):
+        queryset = obj.son_poste.filter(is_active = True)
+        serializer = SalarUserSerializer(queryset, many=True)
+        return serializer.data
         
     def update(self, instance, validated_data):
         instance.name = validated_data['name']
         instance.salar = validated_data['salar']
         instance.save()
         return instance
-    
+        
     
 class userSerializer(ModelSerializer):
     # wallet_user = SerializerMethodField()

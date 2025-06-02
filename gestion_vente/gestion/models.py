@@ -32,18 +32,20 @@ class TauxEchange(models.Model):
     def __str__(self):
         return self.devise
     
-class Products(models.Model):
+    
+class Distributeur(models.Model):
     name = models.CharField(max_length=100)
+    adress = models.CharField(max_length=100)
+    tel = models.IntegerField()
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return self.name
     
-class Distributeur(models.Model):
+class Products(models.Model):
+    distributeur = models.ForeignKey(Distributeur, on_delete=models.CASCADE, related_name='distributeur_product')
     name = models.CharField(max_length=100)
-    adress = models.CharField(max_length=100)
-    tel = models.IntegerField()
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
     
@@ -65,7 +67,7 @@ class Customer(models.Model):
 
     
 class PointVente(models.Model):
-    respo = models.ForeignKey(User, on_delete=models.CASCADE, related_name='respo_POS')
+    # respo = models.ForeignKey(User, on_delete=models.CASCADE, related_name='respo_POS')
     fullName = models.CharField(max_length=100)
     adress = models.CharField(max_length=100)
     tel = models.IntegerField()
@@ -74,6 +76,12 @@ class PointVente(models.Model):
     
     def __str__(self):
         return self.fullName
+    
+class ResponsablePos(models.Model):
+    respo = models.ForeignKey(User, on_delete=models.CASCADE, related_name='respo_POS')
+    pos = models.ForeignKey(PointVente, on_delete=models.CASCADE, related_name='son_POS')
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
  
  
 # non utilise 
@@ -208,5 +216,13 @@ class Poste(models.Model):
     name = models.CharField(max_length=100)
     salar = models.FloatField()
     is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
+    
+
+class SalaireUser(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='salarie')
+    poste = models.ForeignKey(Poste, on_delete=models.CASCADE, related_name='son_poste')
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
     
     
