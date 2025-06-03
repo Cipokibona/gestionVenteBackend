@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import TauxEchange, TypeEchange, Products, Distributeur, Customer, PointVente, BasketAgent, Vente, ListProductVente, TypeEchangeVente, Poste, BasketListProducts, ResponsablePos, SalaireUser, ProductPointVente, ApprovisionnementPos, Achat
+from .models import TauxEchange, TypeEchange, Products, Distributeur, Customer, PointVente, BasketAgent, Vente, ListProductVente, TypeEchangeVente, Poste, BasketListProducts, ResponsablePos, SalaireUser, ProductPointVente, ApprovisionnementPos, Achat,ListProductApprovionnement, ListProductAchat
 # , BuyProduct, AllProductAchat,  AllWalletBuy, SellProduct, AllProductVente, AllWalletVente, Transaction, WalletTypeBasket
 
 @admin.register(TypeEchange)
@@ -66,9 +66,13 @@ class SalaireAdmin(admin.ModelAdmin):
 # class ListProductVenteAdmin(admin.ModelAdmin):
 #     list_display = ['vente','wallet','montant','is_active','date']
     
-# @admin.register(Transaction)
-# class TransactionAdmin(admin.ModelAdmin):
-#     list_display = ['author','walletSource','walletCible','montant','bordereau','is_delivered','is_active','date','date_delivered']
+@admin.register(ListProductApprovionnement)
+class ListProductApprovionnementAdmin(admin.ModelAdmin):
+    list_display = ['approvisionnement','stock','product','is_active','date']
+    
+@admin.register(ListProductAchat)
+class ListProductAchatAdmin(admin.ModelAdmin):
+    list_display = ['achat','product','quantity','prixAchat','prixVente','date_expiration','is_active','date']
     
 @admin.register(BasketAgent)
 class BasketAgentAdmin(admin.ModelAdmin):

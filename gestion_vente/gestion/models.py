@@ -157,6 +157,57 @@ class Achat(models.Model):
     date_recouvrement = models.DateTimeField()
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
+    
+# en stock dans le point de vente 
+class ProductPointVente(models.Model):
+    pos = models.ForeignKey(PointVente, on_delete=models.CASCADE, related_name='product_of_pos')
+    product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='in_product_pos')
+    quantity = models.IntegerField()
+    prixAchat = models.FloatField()
+    prixVente = models.FloatField()
+    date_expiration = models.DateTimeField()
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
+    
+    
+# list product approvisionnement
+
+class ListProductApprovionnement(models.Model):
+    approvisionnement = models.ForeignKey(ApprovisionnementPos, on_delete=models.CASCADE, related_name='origin_pos_product')
+    stock = models.ForeignKey(ProductPointVente, on_delete=models.CASCADE, related_name='product_appro_from')
+    product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='product_appro_for')
+    quantity = models.IntegerField()
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
+    
+
+class ListProductAchat(models.Model):
+    achat = models.ForeignKey(Achat, on_delete=models.CASCADE, related_name='product_achat_info')
+    product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='product_distr_for')
+    quantity = models.IntegerField()
+    prixAchat = models.FloatField()
+    prixVente = models.FloatField()
+    date_expiration = models.DateTimeField()
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
+
+# class ProductApprovisionnement(models.Model):
+#     approvisionnement = models.ForeignKey(ApprovisionnementPos, on_delete=models.CASCADE, related_name='origin_pos_product')
+#     stock = models.ForeignKey(ProductPointVente, on_delete=models.CASCADE, related_name='product_appro_from')
+#     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='product_appro_for')
+#     quantity = models.IntegerField()
+#     is_active = models.BooleanField(default=True)
+#     date = models.DateTimeField(auto_now_add=True)
+    
+# class ProductAchat(models.Model):
+#     achat = models.ForeignKey(Achat, on_delete=models.CASCADE, related_name='product_achat_info')
+#     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='product_distr_for')
+#     quantity = models.IntegerField()
+#     prixAchat = models.FloatField()
+#     prixVente = models.FloatField()
+#     date_expiration = models.DateTimeField()
+#     is_active = models.BooleanField(default=True)
+#     date = models.DateTimeField(auto_now_add=True)
 
 class BasketListProducts(models.Model):
     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='product_for_agent')
@@ -242,15 +293,3 @@ class SalaireUser(models.Model):
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
    
-# en stock dans le point de vente 
-class ProductPointVente(models.Model):
-    pos = models.ForeignKey(PointVente, on_delete=models.CASCADE, related_name='product_of_pos')
-    product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='in_product_pos')
-    quantity = models.IntegerField()
-    prixAchat = models.FloatField()
-    prixVente = models.FloatField()
-    date_expiration = models.DateTimeField()
-    is_active = models.BooleanField(default=True)
-    date = models.DateTimeField(auto_now_add=True)
-    
-    

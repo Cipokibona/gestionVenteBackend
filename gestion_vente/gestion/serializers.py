@@ -2,7 +2,7 @@ from django.utils import timezone
 from rest_framework.exceptions import NotFound
 from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
 from authentification.models import User
-from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente, ProductPointVente
+from gestion.models import TypeEchange, TauxEchange, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente, ProductPointVente, ApprovisionnementPos, Achat, ListProductAchat, ListProductApprovionnement
 
 
 # class TransactionSerializer(ModelSerializer):
@@ -39,6 +39,28 @@ class TauxEchangeSerializer(ModelSerializer):
         
         new_taux = TauxEchange.objects.create(**validated_data)
         return new_taux
+    
+class ListProductApprovisionnementSerializer(ModelSerializer):
+    product_name = SerializerMethodField()
+    
+    class Meta:
+        model = ListProductApprovionnement
+        fields = ['id','approvisionnement','stock','product','product_name','is_active','date']
+        
+    def get_product_name(self, obj):
+        queryset = obj.product
+        return queryset.name
+        
+class ListProductAchatSerializer(ModelSerializer):
+    product_name = SerializerMethodField()
+    
+    class Meta:
+        model = ListProductAchat
+        fields = ['id','achat','product','product_name','quantity','prixAchat','prixVente','date_expiration','is_active','date']
+        
+    def get_product_name(self, obj):
+        queryset = obj.product
+        return queryset.name
 
 
 # class WalletSerializer(ModelSerializer):
@@ -336,6 +358,40 @@ class ProductPointVenteSerializer(ModelSerializer):
     def get_product_name(self, obj):
         queryset = obj.product
         return queryset.name
+    
+class ApprovisionnementPosSerializer(ModelSerializer):
+    posDistributeur_name = SerializerMethodField()
+    list_product = SerializerMethodField()
+    
+    class Meta:
+        model = ApprovisionnementPos
+        fields = ['id','posDistributeur','posDistributeur_name','posCible','montant','reste','list_product','date_recouvrement','is_active','date']
+        
+    def get_posDistributeur_name(self, obj):
+        queryset = obj.posDistributeur
+        return queryset.fullName
+    
+    def get_list_product(self, obj):
+        queryset = obj.origin_pos_product.filter(is_active = True)
+        serializer = ListProductApprovisionnementSerializer(queryset, many = True)
+        return serializer.data
+        
+class AchatSerializer(ModelSerializer):
+    distributeur_name = SerializerMethodField()
+    list_product = SerializerMethodField()
+    
+    class Meta:
+        model = Achat
+        fields = ['id','distributeur','posCible','montant','reste','list_product','date_recouvrement','is_active','date']
+        
+    def get_distributeur_name(self, obj):
+        queryset = obj.distributeur
+        return queryset.name
+    
+    def get_list_product(self, obj):
+        queryset = obj.product_achat_info.filter(is_active = True)
+        serializer = ListProductAchatSerializer(queryset, many = True)
+        return serializer.data
     
 class PointVenteSerializer(ModelSerializer):
     list_respo = SerializerMethodField()
