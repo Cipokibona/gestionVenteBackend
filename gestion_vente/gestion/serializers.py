@@ -344,7 +344,7 @@ class userSerializer(ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['id','username','password','email','first_name','last_name','tel','email','imgProfil','is_agent_commercial','is_staff','is_admin','is_respo_pos','is_active']
+        fields = ['id','username','password','email','first_name','last_name','tel','email','imgProfil','is_agent_commercial','is_admin','is_respo_pos','is_active']
         
     # def get_wallet_user(self, obj):
     #     queryset = obj.wallet_user.filter(is_active=True)
@@ -353,15 +353,17 @@ class userSerializer(ModelSerializer):
     
     def create(self, validated_data):
         user = User(
-          first_name = validated_data['first_name'],
-          last_name = validated_data['last_name'],
-          tel = validated_data['tel'],
-          imgProfil = validated_data['imgProfil'],
-          is_agent_commercial = validated_data['is_agent_commercial'],
-          is_staff = validated_data['is_staff'],
-          is_admin = validated_data['is_admin'],
-          is_respo_pos = validated_data['is_respo_pos']
+            username = validated_data['username'],
+            first_name = validated_data['first_name'],
+            last_name = validated_data['last_name'],
+            tel = validated_data['tel'],
+            email = validated_data['email'],
+            imgProfil = validated_data['imgProfil'],
+            is_agent_commercial = validated_data['is_agent_commercial'],
+            is_admin = validated_data['is_admin'],
+            is_respo_pos = validated_data['is_respo_pos']
         )
+        user.set_password(validated_data['password'])  # Hachage du mot de passe
         user.save()
         
         # type_echanges = TypeEchange.objects.all()
