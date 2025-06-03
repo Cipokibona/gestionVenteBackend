@@ -2,7 +2,7 @@ from django.utils import timezone
 from rest_framework.exceptions import NotFound
 from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
 from authentification.models import User
-from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente
+from gestion.models import TypeEchange, Wallet, TauxEchange, Transaction, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente, ProductPointVente
 
 
 # class TransactionSerializer(ModelSerializer):
@@ -326,16 +326,33 @@ class ResponsablePosSerializer(ModelSerializer):
         queryset = obj.respo
         return queryset.username
     
+class ProductPointVenteSerializer(ModelSerializer):
+    product_name = SerializerMethodField()
+    
+    class Meta:
+        model = ProductPointVente
+        fields = ['id','pos','product','product_name','quantity','prixAchat','prixVente','date_expiration','is_active']
+        
+    def get_product_name(self, obj):
+        queryset = obj.product
+        return queryset.name
+    
 class PointVenteSerializer(ModelSerializer):
     list_respo = SerializerMethodField()
+    list_product = SerializerMethodField()
     
     class Meta:
         model = PointVente
-        fields = ['id','fullName','adress','tel','list_respo','is_active','date']
+        fields = ['id','fullName','adress','tel','list_respo','list_product','is_active','date']
         
     def get_list_respo(self, obj):
         queryset = obj.son_POS.filter(is_active = True)
         serializer = ResponsablePosSerializer(queryset, many=True)
+        return serializer.data
+    
+    def get_list_product(self, obj):
+        queryset = obj.product_of_pos.filter(is_active = True)
+        serializer = ProductPointVenteSerializer(queryset, many=True)
         return serializer.data
         
     

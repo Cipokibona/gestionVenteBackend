@@ -140,7 +140,23 @@ class Vente(models.Model):
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
     
-
+class ApprovisionnementPos(models.Model):
+    posDistributeur = models.ForeignKey(PointVente, on_delete=models.CASCADE, related_name='pos_distributeur')
+    posCible = models.ForeignKey(PointVente, on_delete=models.CASCADE, related_name='pos_recepteur')
+    montant = models.FloatField()
+    reste = models.FloatField()
+    date_recouvrement = models.DateTimeField()
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
+    
+class Achat(models.Model):
+    distributeur = models.ForeignKey(Distributeur, on_delete=models.CASCADE, related_name='distributeur_achat')
+    posCible = models.ForeignKey(PointVente, on_delete=models.CASCADE, related_name='pos_cible')
+    montant = models.FloatField()
+    reste = models.FloatField()
+    date_recouvrement = models.DateTimeField()
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
 
 class BasketListProducts(models.Model):
     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='product_for_agent')
@@ -223,6 +239,17 @@ class Poste(models.Model):
 class SalaireUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='salarie')
     poste = models.ForeignKey(Poste, on_delete=models.CASCADE, related_name='son_poste')
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
+   
+# en stock dans le point de vente 
+class ProductPointVente(models.Model):
+    pos = models.ForeignKey(PointVente, on_delete=models.CASCADE, related_name='product_of_pos')
+    product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='in_product_pos')
+    quantity = models.IntegerField()
+    prixAchat = models.FloatField()
+    prixVente = models.FloatField()
+    date_expiration = models.DateTimeField()
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
     
