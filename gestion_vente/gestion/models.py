@@ -174,9 +174,12 @@ class ProductPointVente(models.Model):
 
 class ListProductApprovionnement(models.Model):
     approvisionnement = models.ForeignKey(ApprovisionnementPos, on_delete=models.CASCADE, related_name='origin_pos_product')
-    stock = models.ForeignKey(ProductPointVente, on_delete=models.CASCADE, related_name='product_appro_from')
+    # stock = models.ForeignKey(ProductPointVente, on_delete=models.CASCADE, related_name='product_appro_from')
     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='product_appro_for')
     quantity = models.IntegerField()
+    prixAchat = models.FloatField()
+    prixVente = models.FloatField()
+    date_expiration = models.DateTimeField()
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
     

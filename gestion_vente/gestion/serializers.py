@@ -45,7 +45,7 @@ class ListProductApprovisionnementSerializer(ModelSerializer):
     
     class Meta:
         model = ListProductApprovionnement
-        fields = ['id','approvisionnement','stock','product','product_name','is_active','date']
+        fields = ['id','approvisionnement','quantity','prixAchat','prixVente','date_expiration','product','product_name','is_active','date']
         
     def get_product_name(self, obj):
         queryset = obj.product

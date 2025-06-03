@@ -68,7 +68,7 @@ class SalaireAdmin(admin.ModelAdmin):
     
 @admin.register(ListProductApprovionnement)
 class ListProductApprovionnementAdmin(admin.ModelAdmin):
-    list_display = ['approvisionnement','stock','product','is_active','date']
+    list_display = ['approvisionnement','product','quantity','prixAchat','prixVente','date_expiration','is_active','date']
     
 @admin.register(ListProductAchat)
 class ListProductAchatAdmin(admin.ModelAdmin):
