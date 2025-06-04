@@ -2,7 +2,7 @@ from django.utils import timezone
 from rest_framework.exceptions import NotFound
 from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
 from authentification.models import User
-from gestion.models import TypeEchange, TauxEchange, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente, ProductPointVente, ApprovisionnementPos, Achat, ListProductAchat, ListProductApprovionnement
+from gestion.models import TypeEchange, TauxEchange, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente, ProductPointVente, ApprovisionnementPos, Achat, ListProductAchat, ListProductApprovionnement, ListPayApprovisionnementPos, ListPayAchat
 
 
 # class TransactionSerializer(ModelSerializer):
@@ -50,6 +50,17 @@ class ListProductApprovisionnementSerializer(ModelSerializer):
     def get_product_name(self, obj):
         queryset = obj.product
         return queryset.name
+    
+    # def create(self, validated_data):
+    #     approvisionnement = ApprovisionnementPos.objects.get(id=validated_data['approvisionnement'])
+    #     productPos = ProductPointVente.objects.get(
+    #         pos=approvisionnement.posDistributeur,
+    #         product = validated_data['product']
+    #         )
+    #     productPos.quantity = productPos.quantity - validated_data['quantity']
+    #     productPos.save()
+        
+    #     return super().create(validated_data)
         
 class ListProductAchatSerializer(ModelSerializer):
     product_name = SerializerMethodField()
@@ -225,6 +236,29 @@ class ListProductVenteSerializer(ModelSerializer):
     def get_product_name(self, obj):
         queryset = obj.product
         return queryset.name
+    
+# type d'echange de vente, achat et approvisionnement
+class TypeEchangeApprovSerializer(ModelSerializer):
+    typeEchange_name = SerializerMethodField()
+    
+    class Meta:
+        model = ListPayApprovisionnementPos
+        fields = ['id','typeEchange','typeEchange_name','approvisionnement','montant','bordereau','is_active','date']
+        
+    def get_typeEchange_name(self, obj):
+        queryset = obj.typeEchange
+        return queryset.nom
+    
+class TypeEchangeAchatSerializer(ModelSerializer):
+    typeEchange_name = SerializerMethodField()
+    
+    class Meta:
+        model = ListPayAchat
+        fields = ['id','typeEchange','typeEchange_name','achat','montant','bordereau','is_active','date']
+        
+    def get_typeEchange_name(self, obj):
+        queryset = obj.typeEchange
+        return queryset.nom
 
 class TypeEchangeVenteSerializer(ModelSerializer):
     typeEchange_name = SerializerMethodField()

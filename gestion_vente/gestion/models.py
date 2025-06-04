@@ -183,6 +183,14 @@ class ListProductApprovionnement(models.Model):
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
     
+class ListPayApprovisionnementPos(models.Model):
+    typeEchange = models.ForeignKey(TypeEchange, on_delete=models.CASCADE, related_name='approv_money_echange')
+    approvisionnement = models.ForeignKey(ApprovisionnementPos, on_delete=models.CASCADE, related_name='type_on_approv')
+    montant = models.FloatField()
+    bordereau =  models.CharField(max_length=100, null=True)
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
+    
 
 class ListProductAchat(models.Model):
     achat = models.ForeignKey(Achat, on_delete=models.CASCADE, related_name='product_achat_info')
@@ -191,6 +199,14 @@ class ListProductAchat(models.Model):
     prixAchat = models.FloatField()
     prixVente = models.FloatField()
     date_expiration = models.DateTimeField()
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
+    
+class ListPayAchat(models.Model):
+    typeEchange = models.ForeignKey(TypeEchange, on_delete=models.CASCADE, related_name='achat_money_echange')
+    achat = models.ForeignKey(Achat, on_delete=models.CASCADE, related_name='type_on_achat')
+    montant = models.FloatField()
+    bordereau =  models.CharField(max_length=100, null=True)
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
 

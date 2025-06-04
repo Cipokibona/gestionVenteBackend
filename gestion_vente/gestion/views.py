@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from authentification.models import User
-from gestion.models import TypeEchange,  TauxEchange,BasketListProducts, BasketAgent, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, Products, PointVente, ApprovisionnementPos, Achat, ListProductApprovionnement
+from gestion.models import TypeEchange,  TauxEchange,BasketListProducts, BasketAgent, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, Products, PointVente, ApprovisionnementPos, Achat, ListProductApprovionnement, ListPayAchat, ListPayApprovisionnementPos
 # , Wallet, Transaction
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from .serializers import userSerializer, TauxEchangeSerializer, TypeEchangeSerializer, BasketListProductSerializer, CustomerSerializer, VenteSerializer, ListProductVenteSerializer, TypeEchangeVenteSerializer, PosteSerializer, BasketAgentSerializer, SalarUserSerializer, DistributeurSerializer, ProductSerializer, PointVenteSerializer, ResponsablePosSerializer, AchatSerializer, ApprovisionnementPosSerializer, ListProductApprovisionnementSerializer
+from .serializers import userSerializer, TauxEchangeSerializer, TypeEchangeSerializer, BasketListProductSerializer, CustomerSerializer, VenteSerializer, ListProductVenteSerializer, TypeEchangeVenteSerializer, PosteSerializer, BasketAgentSerializer, SalarUserSerializer, DistributeurSerializer, ProductSerializer, PointVenteSerializer, ResponsablePosSerializer, AchatSerializer, ApprovisionnementPosSerializer, ListProductApprovisionnementSerializer, TypeEchangeApprovSerializer, TypeEchangeAchatSerializer
 # , TransactionSerializer, BasketForAgentSerializer, WalletSerializer
 
 class UserAPIView(ModelViewSet):
@@ -71,6 +71,19 @@ class ListProductVenteView(ModelViewSet):
     
     def get_queryset(self):
         return ListProductVente.objects.filter(is_active = True)
+    
+# type echange vente, achat, approvisionnement
+class TypeEchangeApprovView(ModelViewSet):
+    serializer_class = TypeEchangeApprovSerializer
+    
+    def get_queryset(self):
+        return ListPayApprovisionnementPos.objects.filter(is_active = True)
+    
+class TypeEchangeAchatView(ModelViewSet):
+    serializer_class = TypeEchangeAchatSerializer
+    
+    def get_queryset(self):
+        return ListPayAchat.objects.filter(is_active = True)
     
 class TypeEchangeVenteView(ModelViewSet):
     serializer_class = TypeEchangeVenteSerializer
