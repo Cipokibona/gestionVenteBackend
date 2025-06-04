@@ -51,16 +51,35 @@ class ListProductApprovisionnementSerializer(ModelSerializer):
         queryset = obj.product
         return queryset.name
     
-    # def create(self, validated_data):
-    #     approvisionnement = ApprovisionnementPos.objects.get(id=validated_data['approvisionnement'])
-    #     productPos = ProductPointVente.objects.get(
-    #         pos=approvisionnement.posDistributeur,
-    #         product = validated_data['product']
-    #         )
-    #     productPos.quantity = productPos.quantity - validated_data['quantity']
-    #     productPos.save()
+    def create(self, validated_data):
+        approvisionnement = validated_data['approvisionnement']
+        productPosDistr = ProductPointVente.objects.get(
+            pos = approvisionnement.posDistributeur,
+            product = validated_data['product']
+        )
+        productPosDistr.quantity = productPosDistr.quantity - validated_data['quantity']
+        productPosDistr.save()
+        productPosCible = ProductPointVente(
+            pos=approvisionnement.posCible,
+            product = validated_data['product'],
+            quantity = validated_data['quantity'],
+            prixAchat = validated_data['prixAchat'],
+            prixVente = validated_data['prixVente'],
+            date_expiration = validated_data['date_expiration']
+            )
+        productPosCible.save()
         
-    #     return super().create(validated_data)
+        newProduct = ListProductApprovionnement(
+            approvisionnement = approvisionnement,
+            product = validated_data['product'],
+            quantity = validated_data['quantity'],
+            prixAchat = validated_data['prixAchat'],
+            prixVente = validated_data['prixVente'],
+            date_expiration = validated_data['date_expiration']
+            )
+        newProduct.save()
+        
+        return newProduct
         
 class ListProductAchatSerializer(ModelSerializer):
     product_name = SerializerMethodField()
@@ -72,47 +91,31 @@ class ListProductAchatSerializer(ModelSerializer):
     def get_product_name(self, obj):
         queryset = obj.product
         return queryset.name
-
-
-# class WalletSerializer(ModelSerializer):
-#     wallet_name = SerializerMethodField()
     
-#     class Meta:
-#         model = Wallet
-#         fields = ['id','user','typeEchange','wallet_name','montant','is_active','date']
+    def create(self, validated_data):
+        achat = validated_data['achat']
+        productPosCible = ProductPointVente(
+            pos=achat.posCible,
+            product = validated_data['product'],
+            quantity = validated_data['quantity'],
+            prixAchat = validated_data['prixAchat'],
+            prixVente = validated_data['prixVente'],
+            date_expiration = validated_data['date_expiration']
+            )
+        productPosCible.save()
         
-#     def get_wallet_name(self, obj):
-#         queryset = obj.typeEchange
-#         return queryset.nom
-    
-#     def create(self, validated_data):
-#         typeEchange = TypeEchange.objects.get(nom = validated_data['typeEchange'])
-#         # sourceWallet = Wallet.objects.get(id = validated_data['walletSource'])
+        newProduct = ListProductAchat(
+            achat = achat,
+            product = validated_data['product'],
+            quantity = validated_data['quantity'],
+            prixAchat = validated_data['prixAchat'],
+            prixVente = validated_data['prixVente'],
+            date_expiration = validated_data['date_expiration']
+            )
+        newProduct.save()
         
-#         if (typeEchange.is_bordereau):
-#             newWallet = Wallet(
-#                 user = validated_data['user'],
-#                 typeEchange = validated_data['typeEchange'],
-#                 montant = validated_data['montant'],
-#                 bordereau = validated_data['bordereau']
-#                 )
-#             newWallet.save()
-#             # sourceWallet.montant = sourceWallet.montant - validated_data['montant']
-#             # sourceWallet.save()
-            
-#             return newWallet
-#         else:
-#             wallet = Wallet.objects.get(typeEchange = typeEchange)
-#             wallet.montant = wallet.montant + validated_data['montant']
-#             wallet.save()
-            
-#             return wallet
-        
-#     def update(self, instance, validated_data):
-#         if(instance.montant > validated_data['montant']):
-#             instance.montant = instance.montant - validated_data['montant']
-#             instance.save()
-#         return instance
+        return newProduct
+
 
 class TypeEchangeSerializer(ModelSerializer):
     taux_echange = SerializerMethodField()
@@ -185,40 +188,6 @@ class BasketListProductSerializer(ModelSerializer):
         queryset = obj.product
         return queryset.name
     
-# class WalletTypeBasketSerializer(ModelSerializer):
-#     type_echange_name = SerializerMethodField()
-    
-#     class Meta:
-#         model = WalletTypeBasket
-#         fields = ['id','basket','typeEchange','type_echange_name','montant','is_active','date']
-        
-#     def get_type_echange_name(self, obj):
-#         queryset = obj.typeEchange
-#         return queryset.nom
-
-# class BasketForAgentSerializer(ModelSerializer):
-#     list_product = SerializerMethodField()
-#     depot_name = SerializerMethodField()
-#     wallet_basket = SerializerMethodField()
-    
-#     class Meta:
-#         model = BasketAgent
-#         fields = ['id','agent','depot','depot_name','list_product','wallet_basket','is_active','date']
-        
-#     def get_list_product(self, obj):
-#         queryset = obj.thisproduct_for_basket.filter(is_active = True)
-#         serializer = BasketListProductSerializer(queryset, many=True, required=False)
-#         return serializer.data
-    
-#     def get_depot_name(self, obj):
-#         queryset = obj.depot
-#         return queryset.fullName
-    
-#     def get_wallet_basket(self, obj):
-#         queryset = obj.basket_user
-#         serializer = WalletTypeBasketSerializer(queryset, many=True, required=False)
-#         return serializer.data
-
 
 class CustomerSerializer(ModelSerializer):
     
@@ -416,7 +385,7 @@ class AchatSerializer(ModelSerializer):
     
     class Meta:
         model = Achat
-        fields = ['id','distributeur','posCible','montant','reste','list_product','date_recouvrement','is_active','date']
+        fields = ['id','distributeur','distributeur_name','posCible','montant','reste','list_product','date_recouvrement','is_active','date']
         
     def get_distributeur_name(self, obj):
         queryset = obj.distributeur
