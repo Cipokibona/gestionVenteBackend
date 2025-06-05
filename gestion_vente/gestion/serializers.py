@@ -2,7 +2,7 @@ from django.utils import timezone
 from rest_framework.exceptions import NotFound
 from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
 from authentification.models import User
-from gestion.models import TypeEchange, TauxEchange, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente, ProductPointVente, ApprovisionnementPos, Achat, ListProductAchat, ListProductApprovionnement, ListPayApprovisionnementPos, ListPayAchat
+from gestion.models import TypeEchange, TauxEchange, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente, ProductPointVente, ApprovisionnementPos, Achat, ListProductAchat, ListProductApprovionnement, ListPayApprovisionnementPos, ListPayAchat, ProduitRenduPos, RendreProduitPos
 
 
 # class TransactionSerializer(ModelSerializer):
@@ -413,6 +413,19 @@ class PointVenteSerializer(ModelSerializer):
         queryset = obj.product_of_pos.filter(is_active = True)
         serializer = ProductPointVenteSerializer(queryset, many=True)
         return serializer.data
+    
+# serializer pour rendre les produits aux pos
+class RendreProduitPosSerializer(ModelSerializer):
+    
+    class Meta:
+        model = RendreProduitPos
+        fields = ['id','agent','receiver','pos','is_received','date_received','is_active']
+        
+class ProduitRenduPosSerializer(ModelSerializer):
+    
+    class Meta:
+        model = ProduitRenduPos
+        fields = ['id','product','render','quantity','pricePerUnitOfficiel','date_expiration','is_active']
         
     
 class userSerializer(ModelSerializer):

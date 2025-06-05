@@ -84,47 +84,6 @@ class ResponsablePos(models.Model):
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
  
- 
-# non utilise 
-# class BuyProduct(models.Model):
-#     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_buy')
-#     distributeur = models.ForeignKey(Distributeur, on_delete=models.CASCADE, related_name='distributeur_bu')
-#     depot = models.ForeignKey(PointVente, on_delete=models.CASCADE, related_name='recepteur_buy')
-#     montantPaye = models.FloatField()
-#     is_active = models.BooleanField(default=True)
-#     date = models.DateTimeField(auto_now_add=True)
-
-    
-# non utilise
-# class AllProductAchat(models.Model):
-#     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='all_product_achat')
-#     achat = models.ForeignKey(BuyProduct, on_delete=models.CASCADE, related_name='all_achat')
-#     quantity = models.IntegerField()
-#     pricePerUnitOfficiel = models.FloatField()
-#     pricePerUnitReel = models.FloatField()
-#     date_expiration = models.DateTimeField()
-#     is_active = models.BooleanField(default=True)
-#     date = models.DateTimeField(auto_now_add=True)
-    
-
-# non utilise
-# class AllWalletBuy(models.Model):
-#     buy = models.ForeignKey(BuyProduct, on_delete=models.CASCADE, related_name='buy_wallet')
-#     wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='all_wallet_buy')
-#     montant = models.FloatField()
-#     is_active = models.BooleanField(default=True)
-#     date = models.DateTimeField(auto_now_add=True)
-    
-
-# non utilise 
-# class SellProduct(models.Model):
-#     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_sell')
-#     client = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='client_sell')
-#     depot = models.ForeignKey(PointVente, on_delete=models.CASCADE, related_name='pos_sell')
-#     montantPaye = models.FloatField()
-#     is_active = models.BooleanField(default=True)
-#     date = models.DateTimeField(auto_now_add=True)
-
 
 class BasketAgent(models.Model):
     agent = models.ForeignKey(User, on_delete=models.CASCADE, related_name='agent_stock')
@@ -210,23 +169,6 @@ class ListPayAchat(models.Model):
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
 
-# class ProductApprovisionnement(models.Model):
-#     approvisionnement = models.ForeignKey(ApprovisionnementPos, on_delete=models.CASCADE, related_name='origin_pos_product')
-#     stock = models.ForeignKey(ProductPointVente, on_delete=models.CASCADE, related_name='product_appro_from')
-#     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='product_appro_for')
-#     quantity = models.IntegerField()
-#     is_active = models.BooleanField(default=True)
-#     date = models.DateTimeField(auto_now_add=True)
-    
-# class ProductAchat(models.Model):
-#     achat = models.ForeignKey(Achat, on_delete=models.CASCADE, related_name='product_achat_info')
-#     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='product_distr_for')
-#     quantity = models.IntegerField()
-#     prixAchat = models.FloatField()
-#     prixVente = models.FloatField()
-#     date_expiration = models.DateTimeField()
-#     is_active = models.BooleanField(default=True)
-#     date = models.DateTimeField(auto_now_add=True)
 
 class BasketListProducts(models.Model):
     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='product_for_agent')
@@ -264,17 +206,6 @@ class TypeEchangeVente(models.Model):
     bordereau =  models.CharField(max_length=100, null=True)
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
-
-
-# non utilise
-# class AllProductVente(models.Model):
-#     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='all_product_vente')
-#     vente = models.ForeignKey(SellProduct, on_delete=models.CASCADE, related_name='all_vente')
-#     quantity = models.IntegerField()
-#     pricePerUnitOfficiel = models.FloatField()
-#     pricePerUnitReel = models.FloatField()
-#     is_active = models.BooleanField(default=True)
-#     date = models.DateTimeField(auto_now_add=True)
      
 
 # non utilise
@@ -288,15 +219,6 @@ class Transaction(models.Model):
 #     is_active = models.BooleanField(default=True)
 #     date = models.DateTimeField(auto_now_add=True)
 #     date_delivered = models.DateTimeField(null=True)
-
-
-# non utilise
-# class AllWalletVente(models.Model):
-#     vente = models.ForeignKey(BuyProduct, on_delete=models.CASCADE, related_name='sell_wallet')
-#     wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='all_wallet_sell')
-#     montant = models.FloatField()
-#     is_active = models.BooleanField(default=True)
-#     date = models.DateTimeField(auto_now_add=True)
     
 
 class Poste(models.Model):
@@ -309,6 +231,26 @@ class Poste(models.Model):
 class SalaireUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='salarie')
     poste = models.ForeignKey(Poste, on_delete=models.CASCADE, related_name='son_poste')
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
+    
+    
+# pour rendre les produits aux points de vente
+class RendreProduitPos(models.Model):
+    agent = models.ForeignKey(User, on_delete=models.CASCADE, related_name='agent_render')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receiver_render',null=True)
+    pos = models.ForeignKey(PointVente, on_delete=models.CASCADE, related_name='pos_receiver')
+    is_received = models.BooleanField(default=False)
+    date_received = models.DateTimeField(null=True)
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
+    
+class ProduitRenduPos(models.Model):
+    product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='produit_rendu')
+    render = models.ForeignKey(RendreProduitPos, on_delete=models.CASCADE, related_name='render_product_pos')
+    quantity = models.IntegerField()
+    pricePerUnitOfficiel = models.FloatField()
+    date_expiration = models.DateTimeField()
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
    
