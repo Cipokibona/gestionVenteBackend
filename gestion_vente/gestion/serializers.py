@@ -2,7 +2,7 @@ from django.utils import timezone
 from rest_framework.exceptions import NotFound
 from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
 from authentification.models import User
-from gestion.models import TypeEchange, TauxEchange, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente, ProductPointVente, ApprovisionnementPos, Achat, ListProductAchat, ListProductApprovionnement, ListPayApprovisionnementPos, ListPayAchat, ProduitRenduPos, RendreProduitPos
+from gestion.models import TypeEchange, TauxEchange, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente, ProductPointVente, ApprovisionnementPos, Achat, ListProductAchat, ListProductApprovionnement, ListPayApprovisionnementPos, ListPayAchat, ProduitRenduPos, RendreProduitPos, TypeEchangeRenduPos
 
 
 # class TransactionSerializer(ModelSerializer):
@@ -426,6 +426,13 @@ class ProduitRenduPosSerializer(ModelSerializer):
     class Meta:
         model = ProduitRenduPos
         fields = ['id','product','render','quantity','pricePerUnitOfficiel','date_expiration','is_active']
+        
+# pour rendre type echange
+class TypeEchangeRenduPosSerializer(ModelSerializer):
+    
+    class Meta:
+        model = TypeEchangeRenduPos
+        fields = ['id','typeEchange','render','montant','bordereau','is_active']
         
     
 class userSerializer(ModelSerializer):

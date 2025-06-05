@@ -254,3 +254,12 @@ class ProduitRenduPos(models.Model):
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
    
+# pour rendre argent a pos
+    
+class TypeEchangeRenduPos(models.Model):
+    typeEchange = models.ForeignKey(TypeEchange, on_delete=models.CASCADE, related_name='typeEchange_rendu')
+    render = models.ForeignKey(RendreProduitPos, on_delete=models.CASCADE, related_name='render_typeEchange_pos')
+    montant = models.FloatField()
+    bordereau =  models.CharField(max_length=100, null=True)
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
