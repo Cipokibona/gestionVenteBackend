@@ -288,14 +288,26 @@ class VenteSerializer(ModelSerializer):
         vente = Vente.objects.create(**validated_data)  
         return vente
         
+class ResponsablePosSerializer(ModelSerializer):
+    respo_name = SerializerMethodField()
+    
+    class Meta:
+        model = ResponsablePos
+        fields = ['id','respo','respo_name','pos','is_active','date']
+        
+    def get_respo_name(self, obj):
+        queryset = obj.respo
+        return queryset.username        
+
 class BasketAgentSerializer(ModelSerializer):
     list_product = SerializerMethodField()
     depot_name = SerializerMethodField()
+    depot_respo = SerializerMethodField()
     # basket_vente = SerializerMethodField()
     
     class Meta:
         model = BasketAgent
-        fields = ['id','agent','depot','depot_name','list_product','is_active','date']
+        fields = ['id','agent','depot','depot_name','depot_respo','list_product','is_active','date']
         
     def get_list_product(self, obj):
         queryset = obj.thisproduct_for_basket.filter(is_active = True)
@@ -305,6 +317,11 @@ class BasketAgentSerializer(ModelSerializer):
     def get_depot_name(self, obj):
         queryset = obj.depot
         return queryset.fullName
+    
+    def get_depot_respo(self, obj):
+        queryset = obj.depot.son_POS.filter(is_active = True)
+        serializer = ResponsablePosSerializer(queryset, many = True)
+        return serializer.data
     
     # def get_basket_vente(self, obj):
     #     queryset = obj.panier_vente.filter(is_active = True)
@@ -345,16 +362,6 @@ class PosteSerializer(ModelSerializer):
         instance.save()
         return instance
     
-class ResponsablePosSerializer(ModelSerializer):
-    respo_name = SerializerMethodField()
-    
-    class Meta:
-        model = ResponsablePos
-        fields = ['id','respo','respo_name','pos','is_active','date']
-        
-    def get_respo_name(self, obj):
-        queryset = obj.respo
-        return queryset.username
     
 class ProductPointVenteSerializer(ModelSerializer):
     product_name = SerializerMethodField()
