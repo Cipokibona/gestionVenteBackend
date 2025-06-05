@@ -247,10 +247,11 @@ class VenteSerializer(ModelSerializer):
     agent_name = SerializerMethodField()
     agent_id = SerializerMethodField()
     pos_name = SerializerMethodField()
+    pos_id = SerializerMethodField()
     
     class Meta:
         model = Vente
-        fields = ['id','client','client_name','panier','agent_id','agent_name','pos_name','product_list','typeEchange_list','reste','date_recouvrement','is_active','date']
+        fields = ['id','client','client_name','panier','agent_id','agent_name','pos_id','pos_name','product_list','typeEchange_list','reste','date_recouvrement','is_active','date']
         
     def get_product_list(self, obj):
         queryset = obj.list_vente.filter(is_active = True)
@@ -277,6 +278,10 @@ class VenteSerializer(ModelSerializer):
     def get_pos_name(self, obj):
         queryset = obj.panier
         return queryset.depot.fullName
+    
+    def get_pos_id(self, obj):
+        queryset = obj.panier
+        return queryset.depot.id
         
     
     def create(self, validated_data):
