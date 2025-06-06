@@ -2,7 +2,7 @@ from django.utils import timezone
 from rest_framework.exceptions import NotFound
 from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
 from authentification.models import User
-from gestion.models import TypeEchange, TauxEchange, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente, ProductPointVente, ApprovisionnementPos, Achat, ListProductAchat, ListProductApprovionnement, ListPayApprovisionnementPos, ListPayAchat, ProduitRenduPos, RendreProduitPos, TypeEchangeRenduPos
+from gestion.models import TypeEchange, TauxEchange, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente, ProductPointVente, ApprovisionnementPos, Achat, ListProductAchat, ListProductApprovionnement, ListPayApprovisionnementPos, ListPayAchat, ProduitRenduPos, RendreProduitPos, TypeEchangeRenduPos, RecouvrementVente, CaissePos, BordereauCaisse
 
 
 # class TransactionSerializer(ModelSerializer):
@@ -239,6 +239,12 @@ class TypeEchangeVenteSerializer(ModelSerializer):
     def get_typeEchange_name(self, obj):
         queryset = obj.typeEchange
         return queryset.nom
+    
+class RecouvrementVenteSerializer(ModelSerializer):
+    
+    class Meta:
+        model = RecouvrementVente
+        fields = ['id','respo','typeEchange','vente','montant','bordereau','is_active','date']
 
 class VenteSerializer(ModelSerializer):
     product_list = SerializerMethodField()
@@ -248,10 +254,11 @@ class VenteSerializer(ModelSerializer):
     agent_id = SerializerMethodField()
     pos_name = SerializerMethodField()
     pos_id = SerializerMethodField()
+    recouvrement = SerializerMethodField()
     
     class Meta:
         model = Vente
-        fields = ['id','client','client_name','panier','agent_id','agent_name','pos_id','pos_name','product_list','typeEchange_list','reste','date_recouvrement','is_active','date']
+        fields = ['id','client','client_name','panier','agent_id','agent_name','pos_id','pos_name','product_list','typeEchange_list','reste','date_recouvrement','recouvrement','is_active','date']
         
     def get_product_list(self, obj):
         queryset = obj.list_vente.filter(is_active = True)
@@ -283,10 +290,15 @@ class VenteSerializer(ModelSerializer):
         queryset = obj.panier
         return queryset.depot.id
         
+    def get_recouvrement(self, obj):
+        queryset = obj.recouvrement_vente.filter(is_active = True)
+        serializer = RecouvrementVenteSerializer(queryset, many=True)
+        return serializer.data
     
     def create(self, validated_data):
         vente = Vente.objects.create(**validated_data)  
         return vente
+    
         
 class ResponsablePosSerializer(ModelSerializer):
     respo_name = SerializerMethodField()

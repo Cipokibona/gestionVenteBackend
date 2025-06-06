@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import TauxEchange, TypeEchange, Products, Distributeur, Customer, PointVente, BasketAgent, Vente, ListProductVente, TypeEchangeVente, Poste, BasketListProducts, ResponsablePos, SalaireUser, ProductPointVente, ApprovisionnementPos, Achat,ListProductApprovionnement, ListProductAchat, ListPayAchat, ListPayApprovisionnementPos, RendreProduitPos, ProduitRenduPos,TypeEchangeRenduPos 
+from .models import TauxEchange, TypeEchange, Products, Distributeur, Customer, PointVente, BasketAgent, Vente, ListProductVente, TypeEchangeVente, Poste, BasketListProducts, ResponsablePos, SalaireUser, ProductPointVente, ApprovisionnementPos, Achat,ListProductApprovionnement, ListProductAchat, ListPayAchat, ListPayApprovisionnementPos, RendreProduitPos, ProduitRenduPos,TypeEchangeRenduPos, RecouvrementVente, CaissePos, BordereauCaisse
 # , BuyProduct, AllProductAchat,  AllWalletBuy, SellProduct, AllProductVente, AllWalletVente, Transaction, WalletTypeBasket
 
 @admin.register(TypeEchange)
@@ -135,3 +135,7 @@ class ProduitRenduPosAdmin(admin.ModelAdmin):
 @admin.register(TypeEchangeRenduPos)
 class TypeEchangeRenduPosAdmin(admin.ModelAdmin):
     list_display = ['typeEchange','render','montant','bordereau','is_active','date']
+    
+@admin.register(RecouvrementVente)
+class RecouvrementVenteAdmin(admin.ModelAdmin):
+    list_display = ['respo','typeEchange','vente','montant','bordereau','is_active','date']

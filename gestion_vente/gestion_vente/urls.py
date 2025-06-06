@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from gestion.views import UserAPIView, TypeEchangeView, TauxEchangeView, BasketListView, CustomerView, VenteView, ListProductVenteView, TypeEchangeVenteView, PosteView, BasketAgentView, SalarUserView, DistributeurView, ProductView, PointVenteView, RespoPosView, ApprovisionnementPosView, AchatView, ListProductApprovisionnementView, TypeEchangeApprovView, TypeEchangeAchatView, ListProductAchatView, RendreProduitPosView, ProduitRenduPosView, TypeEchangeRenduPosView
+from gestion.views import UserAPIView, TypeEchangeView, TauxEchangeView, BasketListView, CustomerView, VenteView, ListProductVenteView, TypeEchangeVenteView, PosteView, BasketAgentView, SalarUserView, DistributeurView, ProductView, PointVenteView, RespoPosView, ApprovisionnementPosView, AchatView, ListProductApprovisionnementView, TypeEchangeApprovView, TypeEchangeAchatView, ListProductAchatView, RendreProduitPosView, ProduitRenduPosView, TypeEchangeRenduPosView, RecouvrementVenteView
 # , WalletView, TransactionsView, BasketForAgentView
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -54,6 +54,9 @@ router.register('achat', AchatView, basename='achat')
 router.register('rendre_produit_pos', RendreProduitPosView, basename='rendre_produit_pos')
 router.register('produit_rendu_pos', ProduitRenduPosView, basename='produit_rendu_pos')
 router.register('rendre_typeEchange_pos', TypeEchangeRenduPosView, basename='rendre_typeEchange_pos')
+
+# recouvrement
+router.register('recouvrement', RecouvrementVenteView, basename='recouvrement')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
