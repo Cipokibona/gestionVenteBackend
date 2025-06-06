@@ -237,6 +237,7 @@ class SalaireUser(models.Model):
     
 # pour rendre les produits aux points de vente
 class RendreProduitPos(models.Model):
+    # class rendre tout meme l'argent
     agent = models.ForeignKey(User, on_delete=models.CASCADE, related_name='agent_render')
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receiver_render',null=True)
     pos = models.ForeignKey(PointVente, on_delete=models.CASCADE, related_name='pos_receiver')

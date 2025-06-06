@@ -241,10 +241,35 @@ class TypeEchangeVenteSerializer(ModelSerializer):
         return queryset.nom
     
 class RecouvrementVenteSerializer(ModelSerializer):
+    client_id = SerializerMethodField()
+    client_name = SerializerMethodField()
+    depot_id = SerializerMethodField()
+    depot_name = SerializerMethodField()
+    type_name = SerializerMethodField()
     
     class Meta:
         model = RecouvrementVente
-        fields = ['id','respo','typeEchange','vente','montant','bordereau','is_active','date']
+        fields = ['id','respo','typeEchange','type_name','vente','client_id','client_name','depot_id','depot_name','montant','bordereau','is_active','date']
+        
+    def get_type_name(self, obj):
+        queryset = obj.typeEchange.nom
+        return queryset
+    
+    def get_client_name(self, obj):
+        queryset = obj.vente.client.fullName
+        return queryset
+    
+    def get_client_id(self, obj):
+        queryset = obj.vente.client.id
+        return queryset
+    
+    def get_depot_name(self, obj):
+        queryset = obj.vente.panier.depot.fullName
+        return queryset
+    
+    def get_depot_id(self, obj):
+        queryset = obj.vente.panier.depot.id
+        return queryset
 
 class VenteSerializer(ModelSerializer):
     product_list = SerializerMethodField()
@@ -315,11 +340,16 @@ class BasketAgentSerializer(ModelSerializer):
     list_product = SerializerMethodField()
     depot_name = SerializerMethodField()
     depot_respo = SerializerMethodField()
+    agent_name = SerializerMethodField()
     # basket_vente = SerializerMethodField()
     
     class Meta:
         model = BasketAgent
-        fields = ['id','agent','depot','depot_name','depot_respo','list_product','is_active','date']
+        fields = ['id','agent','agent_name','depot','depot_name','depot_respo','list_product','is_active','date']
+        
+    def get_agent_name(self, obj):
+        queryset = obj.agent
+        return queryset.username
         
     def get_list_product(self, obj):
         queryset = obj.thisproduct_for_basket.filter(is_active = True)
@@ -438,25 +468,52 @@ class PointVenteSerializer(ModelSerializer):
         serializer = ProductPointVenteSerializer(queryset, many=True)
         return serializer.data
     
-# serializer pour rendre les produits aux pos
-class RendreProduitPosSerializer(ModelSerializer):
-    
-    class Meta:
-        model = RendreProduitPos
-        fields = ['id','agent','receiver','pos','is_received','date_received','is_active']
-        
+# serializer pour rendre les produits aux pos        
 class ProduitRenduPosSerializer(ModelSerializer):
+    product_name = SerializerMethodField()
     
     class Meta:
         model = ProduitRenduPos
-        fields = ['id','product','render','quantity','pricePerUnitOfficiel','date_expiration','is_active']
+        fields = ['id','product','product_name','render','quantity','pricePerUnitOfficiel','date_expiration','is_active']
+        
+    def get_product_name(self, obj):
+        queryset = obj.product
+        return queryset.name
         
 # pour rendre type echange
 class TypeEchangeRenduPosSerializer(ModelSerializer):
+    typeEchange_name = SerializerMethodField()
     
     class Meta:
         model = TypeEchangeRenduPos
-        fields = ['id','typeEchange','render','montant','bordereau','is_active']
+        fields = ['id','typeEchange','typeEchange_name','render','montant','bordereau','is_active']
+     
+    def get_typeEchange_name(self, obj):
+        queryset = obj.typeEchange
+        return queryset.nom
+        
+class RendreProduitPosSerializer(ModelSerializer):
+    product_list = SerializerMethodField()
+    type_list = SerializerMethodField()
+    agent_name = SerializerMethodField()
+    
+    class Meta:
+        model = RendreProduitPos
+        fields = ['id','agent','agent_name','receiver','pos','product_list','type_list','is_received','date_received','is_active','date']
+        
+    def get_agent_name(self, obj):
+        queryset = obj.agent
+        return queryset.username
+        
+    def get_product_list(self, obj):
+        queryset = obj.render_product_pos.filter(is_active = True)
+        serializer = ProduitRenduPosSerializer(queryset, many=True)
+        return serializer.data
+    
+    def get_type_list(self, obj):
+        queryset = obj.render_typeEchange_pos.filter(is_active = True)
+        serializer = TypeEchangeRenduPosSerializer(queryset, many=True)
+        return serializer.data
         
     
 class userSerializer(ModelSerializer):
