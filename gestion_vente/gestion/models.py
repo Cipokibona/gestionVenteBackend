@@ -263,3 +263,17 @@ class TypeEchangeRenduPos(models.Model):
     bordereau =  models.CharField(max_length=100, null=True)
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
+    
+# caisse pour pos
+class CaissePos(models.Model):
+    pos = models.ForeignKey(PointVente, on_delete=models.CASCADE, related_name='pos_caisse')
+    typeEchange = models.ForeignKey(TypeEchange, on_delete=models.CASCADE, related_name='type_echange_caisse')
+    montant = models.FloatField()
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
+    
+class BordereauCaisse(models.Model):
+    caisse = models.ForeignKey(CaissePos, on_delete=models.CASCADE, related_name='bordereau_in_caisse')
+    name = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
