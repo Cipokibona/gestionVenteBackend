@@ -140,15 +140,15 @@ class TypeEchangeSerializer(ModelSerializer):
     def create(self, validated_data):
         type_echange = TypeEchange.objects.create(**validated_data)
         
-        # users = User.objects.all()
+        point_ventes = PointVente.objects.all()
         
-        # for user in users:
-        #     new_wallet_user = Wallet(
-        #         user = user,
-        #         typeEchange = type_echange,
-        #         montant = 0,
-        #     )
-        #     new_wallet_user.save()
+        for point_vente in point_ventes:
+            new_caisse = CaissePos(
+                pos = point_vente,
+                typeEchange = type_echange,
+                montant = 0
+            )
+            new_caisse.save()
             
         return type_echange
     
@@ -364,11 +364,6 @@ class BasketAgentSerializer(ModelSerializer):
         queryset = obj.depot.son_POS.filter(is_active = True)
         serializer = ResponsablePosSerializer(queryset, many = True)
         return serializer.data
-    
-    # def get_basket_vente(self, obj):
-    #     queryset = obj.panier_vente.filter(is_active = True)
-    #     serializer = VenteSerializer(queryset, many=True)
-    #     return serializer.data
 
 class SalarUserSerializer(ModelSerializer):
     montant_poste = SerializerMethodField()
@@ -492,6 +487,21 @@ class PointVenteSerializer(ModelSerializer):
         queryset = obj.pos_caisse.filter(is_active = True)
         serializer = CaisseSerializer(queryset, many=True)
         return serializer.data
+    
+    def create(self, validated_data):
+        pos = PointVente.objects.create(**validated_data)
+        
+        type_echanges = TypeEchange.objects.all()
+        
+        for type_echange in type_echanges:
+            new_caisse = CaissePos(
+                pos = pos,
+                typeEchange = type_echange,
+                montant = 0
+            )
+            new_caisse.save()
+            
+        return pos
     
 # serializer pour rendre les produits aux pos        
 class ProduitRenduPosSerializer(ModelSerializer):
