@@ -126,7 +126,7 @@ class ListPayAchatAdmin(admin.ModelAdmin):
     
 @admin.register(RendreProduitPos)
 class RendreProduitPosAdmin(admin.ModelAdmin):
-    list_display = ['agent','receiver','pos','is_received','date_received','is_active','date']
+    list_display = ['agent','vente','panier','recouvrement','receiver','pos','is_received','date_received','is_active','date']
     
 @admin.register(ProduitRenduPos)
 class ProduitRenduPosAdmin(admin.ModelAdmin):

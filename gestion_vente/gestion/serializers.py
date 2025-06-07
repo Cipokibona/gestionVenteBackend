@@ -534,7 +534,7 @@ class RendreProduitPosSerializer(ModelSerializer):
     
     class Meta:
         model = RendreProduitPos
-        fields = ['id','agent','agent_name','receiver','pos','product_list','type_list','is_received','date_received','is_active','date']
+        fields = ['id','vente','panier','recouvrement','agent','agent_name','receiver','pos','product_list','type_list','is_received','date_received','is_active','date']
         
     def get_agent_name(self, obj):
         queryset = obj.agent

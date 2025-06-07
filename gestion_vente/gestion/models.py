@@ -206,6 +206,16 @@ class TypeEchangeVente(models.Model):
     bordereau =  models.CharField(max_length=100, null=True)
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
+    
+# pour recouvrement
+class RecouvrementVente(models.Model):
+    respo = models.ForeignKey(User, on_delete=models.CASCADE, related_name='respo_recouvrement')
+    typeEchange = models.ForeignKey(TypeEchange, on_delete=models.CASCADE, related_name='recouvrement_money_echange')
+    vente = models.ForeignKey(Vente, on_delete=models.CASCADE, related_name='recouvrement_vente')
+    montant = models.FloatField()
+    bordereau =  models.CharField(max_length=100, null=True)
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
      
 
 # non utilise
@@ -239,6 +249,9 @@ class SalaireUser(models.Model):
 class RendreProduitPos(models.Model):
     # class rendre tout meme l'argent
     agent = models.ForeignKey(User, on_delete=models.CASCADE, related_name='agent_render')
+    vente = models.ForeignKey(Vente, on_delete=models.CASCADE, related_name='vente_rendu', null=True)
+    panier = models.ForeignKey(BasketAgent, on_delete=models.CASCADE, related_name='panier_rendu', null=True)
+    recouvrement = models.ForeignKey(RecouvrementVente, on_delete=models.CASCADE, related_name='recouvrement_rendu', null=True)
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receiver_render',null=True)
     pos = models.ForeignKey(PointVente, on_delete=models.CASCADE, related_name='pos_receiver')
     is_received = models.BooleanField(default=False)
@@ -265,15 +278,6 @@ class TypeEchangeRenduPos(models.Model):
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
     
-# pour recouvrement
-class RecouvrementVente(models.Model):
-    respo = models.ForeignKey(User, on_delete=models.CASCADE, related_name='respo_recouvrement')
-    typeEchange = models.ForeignKey(TypeEchange, on_delete=models.CASCADE, related_name='recouvrement_money_echange')
-    vente = models.ForeignKey(Vente, on_delete=models.CASCADE, related_name='recouvrement_vente')
-    montant = models.FloatField()
-    bordereau =  models.CharField(max_length=100, null=True)
-    is_active = models.BooleanField(default=True)
-    date = models.DateTimeField(auto_now_add=True)
     
 # caisse pour pos
 class CaissePos(models.Model):
