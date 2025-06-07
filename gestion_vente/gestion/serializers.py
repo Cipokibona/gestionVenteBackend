@@ -450,13 +450,33 @@ class AchatSerializer(ModelSerializer):
         serializer = ListProductAchatSerializer(queryset, many = True)
         return serializer.data
     
+# caisse des points de ventes
+class BordereauCaisseSerializer(ModelSerializer):
+    
+    class Meta:
+        model = BordereauCaisse
+        fields = ['id','caisse','name','is_active','date']
+
+class CaisseSerializer(ModelSerializer):
+    list_bordereau = SerializerMethodField()
+    
+    class Meta:
+        model = CaissePos
+        fields = ['id','pos','typeEchange','montant','list_bordereau','is_active','date']
+        
+    def get_list_bordereau(self, obj):
+        queryset = obj.bordereau_in_caisse.filter(is_active = True)
+        serializer = BordereauCaisseSerializer(queryset, many = True)
+        return serializer.data
+    
 class PointVenteSerializer(ModelSerializer):
     list_respo = SerializerMethodField()
     list_product = SerializerMethodField()
+    list_caisse = SerializerMethodField()
     
     class Meta:
         model = PointVente
-        fields = ['id','fullName','adress','tel','list_respo','list_product','is_active','date']
+        fields = ['id','fullName','adress','tel','list_respo','list_product','list_caisse','is_active','date']
         
     def get_list_respo(self, obj):
         queryset = obj.son_POS.filter(is_active = True)
@@ -466,6 +486,11 @@ class PointVenteSerializer(ModelSerializer):
     def get_list_product(self, obj):
         queryset = obj.product_of_pos.filter(is_active = True)
         serializer = ProductPointVenteSerializer(queryset, many=True)
+        return serializer.data
+    
+    def get_list_caisse(self, obj):
+        queryset = obj.pos_caisse.filter(is_active = True)
+        serializer = CaisseSerializer(queryset, many=True)
         return serializer.data
     
 # serializer pour rendre les produits aux pos        

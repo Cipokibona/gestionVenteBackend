@@ -139,3 +139,12 @@ class TypeEchangeRenduPosAdmin(admin.ModelAdmin):
 @admin.register(RecouvrementVente)
 class RecouvrementVenteAdmin(admin.ModelAdmin):
     list_display = ['respo','typeEchange','vente','montant','bordereau','is_active','date']
+  
+# caisse  
+@admin.register(CaissePos)
+class CaissePosAdmin(admin.ModelAdmin):
+    list_display = ['pos','typeEchange','montant','is_active','date']
+    
+@admin.register(BordereauCaisse)
+class BordereauAdmin(admin.ModelAdmin):
+    list_display = ['caisse','name','is_active','date']

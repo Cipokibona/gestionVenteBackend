@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from gestion.views import UserAPIView, TypeEchangeView, TauxEchangeView, BasketListView, CustomerView, VenteView, ListProductVenteView, TypeEchangeVenteView, PosteView, BasketAgentView, SalarUserView, DistributeurView, ProductView, PointVenteView, RespoPosView, ApprovisionnementPosView, AchatView, ListProductApprovisionnementView, TypeEchangeApprovView, TypeEchangeAchatView, ListProductAchatView, RendreProduitPosView, ProduitRenduPosView, TypeEchangeRenduPosView, RecouvrementVenteView
+from gestion.views import UserAPIView, TypeEchangeView, TauxEchangeView, BasketListView, CustomerView, VenteView, ListProductVenteView, TypeEchangeVenteView, PosteView, BasketAgentView, SalarUserView, DistributeurView, ProductView, PointVenteView, RespoPosView, ApprovisionnementPosView, AchatView, ListProductApprovisionnementView, TypeEchangeApprovView, TypeEchangeAchatView, ListProductAchatView, RendreProduitPosView, ProduitRenduPosView, TypeEchangeRenduPosView, RecouvrementVenteView, CaisseView
 # , WalletView, TransactionsView, BasketForAgentView
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -57,6 +57,9 @@ router.register('rendre_typeEchange_pos', TypeEchangeRenduPosView, basename='ren
 
 # recouvrement
 router.register('recouvrement', RecouvrementVenteView, basename='recouvrement')
+
+# caisse de point de vente
+router.register('caisse', CaisseView, basename='caisse')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
