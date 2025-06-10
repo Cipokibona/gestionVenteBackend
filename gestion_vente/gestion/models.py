@@ -306,6 +306,7 @@ class Depenses(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='respo_depense')
     caisse = models.ForeignKey(CaissePos, on_delete=models.CASCADE, related_name='caisse_depense')
     tool = models.ForeignKey(ToolsUser, on_delete=models.CASCADE, related_name='tool_depense', null=True)
+    description = models.CharField(max_length=100)
     user_depense = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_depense', null=True)
     montant = models.FloatField()
     is_active = models.BooleanField(default=True)

@@ -157,4 +157,4 @@ class ToolsUserAdmin(admin.ModelAdmin):
 # tools  
 @admin.register(Depenses)
 class DepensesAdmin(admin.ModelAdmin):
-    list_display = ['user','caisse','tool','user_depense','montant','is_active','date']
+    list_display = ['user','caisse','tool','user_depense','description','montant','is_active','date']

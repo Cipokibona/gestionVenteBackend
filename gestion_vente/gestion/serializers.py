@@ -466,15 +466,20 @@ class BordereauCaisseSerializer(ModelSerializer):
 
 class CaisseSerializer(ModelSerializer):
     list_bordereau = SerializerMethodField()
+    typeEchange_name = SerializerMethodField()
     
     class Meta:
         model = CaissePos
-        fields = ['id','pos','typeEchange','montant','list_bordereau','is_active','date']
+        fields = ['id','pos','typeEchange','typeEchange_name','montant','list_bordereau','is_active','date']
         
     def get_list_bordereau(self, obj):
         queryset = obj.bordereau_in_caisse.filter(is_active = True)
         serializer = BordereauCaisseSerializer(queryset, many = True)
         return serializer.data
+    
+    def get_typeEchange_name(self, obj):
+        queryset = obj.typeEchange
+        return queryset.nom
     
 class PointVenteSerializer(ModelSerializer):
     list_respo = SerializerMethodField()
@@ -570,7 +575,7 @@ class DepenseSerializer(ModelSerializer):
     
     class Meta:
         model = Depenses
-        fields = ['id','user','user_name','caisse','caisse_pos','tool','user_depense','user_depense_name','montant','is_active','date']
+        fields = ['id','user','user_name','caisse','caisse_pos','tool','user_depense','user_depense_name','description','montant','is_active','date']
         
     def get_user_name(self, obj):
         queryset = obj.user
@@ -581,7 +586,7 @@ class DepenseSerializer(ModelSerializer):
         return queryset.pos.fullName
     
     def get_user_depense_name(self, obj):
-        queryset = obj.user_depense
+        queryset = obj.user
         return queryset.username
         
     
