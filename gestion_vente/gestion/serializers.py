@@ -447,10 +447,15 @@ class AchatSerializer(ModelSerializer):
     
 # tools du user
 class ToolsUserSerializer(ModelSerializer):
+    user_name = SerializerMethodField()
     
     class Meta:
         model = ToolsUser
-        fields = ['id','user','name','description','is_active','date']
+        fields = ['id','user','user_name','name','description','is_active','date']
+        
+    def get_user_name(self, obj):
+        queryset = obj.user
+        return queryset.username
     
 # caisse des points de ventes
 class BordereauCaisseSerializer(ModelSerializer):
