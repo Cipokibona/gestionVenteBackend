@@ -300,3 +300,13 @@ class ToolsUser(models.Model):
     description = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
+    
+# depenses
+class Depenses(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='respo_depense')
+    caisse = models.ForeignKey(CaissePos, on_delete=models.CASCADE, related_name='caisse_depense')
+    tool = models.ForeignKey(ToolsUser, on_delete=models.CASCADE, related_name='tool_depense', null=True)
+    user_depense = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_depense', null=True)
+    montant = models.FloatField()
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)

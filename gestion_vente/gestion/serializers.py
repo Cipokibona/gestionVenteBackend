@@ -2,7 +2,7 @@ from django.utils import timezone
 from rest_framework.exceptions import NotFound
 from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
 from authentification.models import User
-from gestion.models import TypeEchange, TauxEchange, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente, ProductPointVente, ApprovisionnementPos, Achat, ListProductAchat, ListProductApprovionnement, ListPayApprovisionnementPos, ListPayAchat, ProduitRenduPos, RendreProduitPos, TypeEchangeRenduPos, RecouvrementVente, CaissePos, BordereauCaisse, ToolsUser
+from gestion.models import TypeEchange, TauxEchange, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente, ProductPointVente, ApprovisionnementPos, Achat, ListProductAchat, ListProductApprovionnement, ListPayApprovisionnementPos, ListPayAchat, ProduitRenduPos, RendreProduitPos, TypeEchangeRenduPos, RecouvrementVente, CaissePos, BordereauCaisse, ToolsUser, Depenses
 
 
 # class TransactionSerializer(ModelSerializer):
@@ -561,19 +561,35 @@ class RendreProduitPosSerializer(ModelSerializer):
         queryset = obj.render_typeEchange_pos.filter(is_active = True)
         serializer = TypeEchangeRenduPosSerializer(queryset, many=True)
         return serializer.data
+    
+# depenses 
+class DepenseSerializer(ModelSerializer):
+    user_name = SerializerMethodField()
+    caisse_pos = SerializerMethodField()
+    user_depense_name = SerializerMethodField()
+    
+    class Meta:
+        model = Depenses
+        fields = ['id','user','user_name','caisse','caisse_pos','tool','user_depense','user_depense_name','montant','is_active','date']
+        
+    def get_user_name(self, obj):
+        queryset = obj.user
+        return queryset.username
+    
+    def get_caisse_pos(self, obj):
+        queryset = obj.caisse
+        return queryset.pos.fullName
+    
+    def get_user_depense_name(self, obj):
+        queryset = obj.user_depense
+        return queryset.username
         
     
 class userSerializer(ModelSerializer):
-    # wallet_user = SerializerMethodField()
     
     class Meta:
         model = User
         fields = ['id','username','password','email','first_name','last_name','tel','email','imgProfil','is_agent_commercial','is_admin','is_respo_pos','is_active']
-        
-    # def get_wallet_user(self, obj):
-    #     queryset = obj.wallet_user.filter(is_active=True)
-    #     serializer = WalletSerializer(queryset, many=True, required=False)
-    #     return serializer.data
     
     def create(self, validated_data):
         user = User(
@@ -589,15 +605,5 @@ class userSerializer(ModelSerializer):
         )
         user.set_password(validated_data['password'])  # Hachage du mot de passe
         user.save()
-        
-        # type_echanges = TypeEchange.objects.all()
-        
-        # for type_echange in type_echanges:
-        #     new_wallet = Wallet(
-        #         user = user,
-        #         typeEchange = type_echange,
-        #         montant = 0,
-        #     )
-        #     new_wallet.save()
         
         return user
