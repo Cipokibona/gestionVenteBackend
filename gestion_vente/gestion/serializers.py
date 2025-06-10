@@ -2,7 +2,7 @@ from django.utils import timezone
 from rest_framework.exceptions import NotFound
 from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
 from authentification.models import User
-from gestion.models import TypeEchange, TauxEchange, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente, ProductPointVente, ApprovisionnementPos, Achat, ListProductAchat, ListProductApprovionnement, ListPayApprovisionnementPos, ListPayAchat, ProduitRenduPos, RendreProduitPos, TypeEchangeRenduPos, RecouvrementVente, CaissePos, BordereauCaisse
+from gestion.models import TypeEchange, TauxEchange, Products, BasketAgent, BasketListProducts, WalletTypeBasket, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente, ProductPointVente, ApprovisionnementPos, Achat, ListProductAchat, ListProductApprovionnement, ListPayApprovisionnementPos, ListPayAchat, ProduitRenduPos, RendreProduitPos, TypeEchangeRenduPos, RecouvrementVente, CaissePos, BordereauCaisse, ToolsUser
 
 
 # class TransactionSerializer(ModelSerializer):
@@ -444,6 +444,13 @@ class AchatSerializer(ModelSerializer):
         queryset = obj.product_achat_info.filter(is_active = True)
         serializer = ListProductAchatSerializer(queryset, many = True)
         return serializer.data
+    
+# tools du user
+class ToolsUserSerializer(ModelSerializer):
+    
+    class Meta:
+        model = ToolsUser
+        fields = ['id','user','name','description','is_active','date']
     
 # caisse des points de ventes
 class BordereauCaisseSerializer(ModelSerializer):

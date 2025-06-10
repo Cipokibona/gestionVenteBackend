@@ -292,3 +292,11 @@ class BordereauCaisse(models.Model):
     name = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
+    
+# outils de travail
+class ToolsUser(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tool_respo')
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
