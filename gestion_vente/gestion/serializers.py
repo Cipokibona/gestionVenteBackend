@@ -575,7 +575,7 @@ class DepenseSerializer(ModelSerializer):
     
     class Meta:
         model = Depenses
-        fields = ['id','user','user_name','caisse','caisse_pos','tool','user_depense','user_depense_name','description','montant','is_active','date']
+        fields = ['id','user','user_name','caisse','caisse_pos','tool','user_depense','user_depense_name','description','montant','is_salaire','is_tool','is_active','date']
         
     def get_user_name(self, obj):
         queryset = obj.user
@@ -586,8 +586,10 @@ class DepenseSerializer(ModelSerializer):
         return queryset.pos.fullName
     
     def get_user_depense_name(self, obj):
-        queryset = obj.user
-        return queryset.username
+        queryset = obj.user_depense
+        if queryset is not None:
+            return queryset.username
+        return None
         
     
 class userSerializer(ModelSerializer):

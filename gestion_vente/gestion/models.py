@@ -309,5 +309,7 @@ class Depenses(models.Model):
     description = models.CharField(max_length=100)
     user_depense = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_depense', null=True)
     montant = models.FloatField()
+    is_salaire = models.BooleanField(default=False)
+    is_tool = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
