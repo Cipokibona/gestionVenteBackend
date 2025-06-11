@@ -216,3 +216,9 @@ class DepenseSalaireView(ModelViewSet):
     
     def get_queryset(self):
         return Depenses.objects.filter(is_salaire = True)
+    
+class DepenseToolsView(ModelViewSet):
+    serializer_class = DepenseSerializer
+    
+    def get_queryset(self):
+        return Depenses.objects.filter(is_tool = True)
