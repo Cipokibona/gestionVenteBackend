@@ -590,6 +590,26 @@ class DepenseSerializer(ModelSerializer):
         if queryset is not None:
             return queryset.username
         return None
+    
+    
+# info sur les produits
+class ProductInfoVenteSerializer(ModelSerializer):
+    list_achat = SerializerMethodField()
+    list_vente = SerializerMethodField()
+    
+    class Meta:
+        model = Products
+        fields = ['id','name','description','list_achat','list_vente']
+        
+    def get_list_achat(self, obj):
+        queryset = obj.product_distr_for.filter(is_active = True)
+        serializer = ListProductAchatSerializer(queryset, many=True)
+        return serializer.data
+    
+    def get_list_vente(self, obj):
+        queryset = obj.product_vente.filter(is_active = True)
+        serializer = ListProductVenteSerializer(queryset, many=True)
+        return serializer.data
         
     
 class userSerializer(ModelSerializer):
