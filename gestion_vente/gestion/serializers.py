@@ -611,6 +611,44 @@ class ProductInfoVenteSerializer(ModelSerializer):
         serializer = ListProductVenteSerializer(queryset, many=True)
         return serializer.data
         
+ 
+# info sur user et tools
+class ToolsInfoSerializer(ModelSerializer):
+    list_depense = SerializerMethodField()
+    
+    class Meta:
+        model = ToolsUser
+        fields = ['id','user','name','description','list_depense']
+        
+    def get_list_depense(self, obj):
+        queryset = obj.tool_depense.filter(is_active = True)
+        serializer = DepenseSerializer(queryset, many = True)
+        return serializer.data
+        
+  
+class UserInfoSerializer(ModelSerializer):
+    list_vente = SerializerMethodField()
+    list_depense = SerializerMethodField()
+    list_depense_tools = SerializerMethodField()
+    
+    class Meta:
+        model = User
+        fields = ['id','username','first_name','last_name','is_agent_commercial','is_admin','is_respo_pos','list_vente','list_depense','list_depense_tools']
+        
+    def get_list_vente(self, obj):
+        queryset = ListProductVente.objects.filter(list_vente__panier_vente__agent_stock = obj, is_active = True)
+        serializer = ListProductVenteSerializer(queryset, many = True)
+        return serializer.data
+    
+    def get_list_depense(self, obj):
+        queryset = obj.user_depense.filter(is_active = True)
+        serializer = DepenseSerializer(queryset, many = True)
+        return serializer.data
+    
+    def get_list_depense_tools(self, obj):
+        queryset = obj.tool_respo.filter(is_active = True)
+        serializer = ToolsInfoSerializer(queryset, many = True)
+        return serializer.data
     
 class userSerializer(ModelSerializer):
     
