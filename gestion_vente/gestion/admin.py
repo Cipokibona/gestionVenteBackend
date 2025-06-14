@@ -122,7 +122,7 @@ class ListPayApprovisionnementPosAdmin(admin.ModelAdmin):
     
 @admin.register(ListPayAchat)
 class ListPayAchatAdmin(admin.ModelAdmin):
-    list_display = ['typeEchange','achat','montant','bordereau','is_active','date']
+    list_display = ['caisse','achat','montant','bordereau','is_active','date']
     
 @admin.register(RendreProduitPos)
 class RendreProduitPosAdmin(admin.ModelAdmin):

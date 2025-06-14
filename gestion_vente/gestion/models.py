@@ -160,14 +160,6 @@ class ListProductAchat(models.Model):
     date_expiration = models.DateTimeField()
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
-    
-class ListPayAchat(models.Model):
-    typeEchange = models.ForeignKey(TypeEchange, on_delete=models.CASCADE, related_name='achat_money_echange')
-    achat = models.ForeignKey(Achat, on_delete=models.CASCADE, related_name='type_on_achat')
-    montant = models.FloatField()
-    bordereau =  models.CharField(max_length=100, null=True)
-    is_active = models.BooleanField(default=True)
-    date = models.DateTimeField(auto_now_add=True)
 
 
 class BasketListProducts(models.Model):
@@ -311,5 +303,14 @@ class Depenses(models.Model):
     montant = models.FloatField()
     is_salaire = models.BooleanField(default=False)
     is_tool = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
+    
+# list achat
+class ListPayAchat(models.Model):
+    caisse = models.ForeignKey(CaissePos, on_delete=models.CASCADE, related_name='achat_money_echange')
+    achat = models.ForeignKey(Achat, on_delete=models.CASCADE, related_name='type_on_achat')
+    montant = models.FloatField()
+    bordereau =  models.CharField(max_length=100, null=True)
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)

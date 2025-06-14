@@ -218,16 +218,6 @@ class TypeEchangeApprovSerializer(ModelSerializer):
         queryset = obj.typeEchange
         return queryset.nom
     
-class TypeEchangeAchatSerializer(ModelSerializer):
-    typeEchange_name = SerializerMethodField()
-    
-    class Meta:
-        model = ListPayAchat
-        fields = ['id','typeEchange','typeEchange_name','achat','montant','bordereau','is_active','date']
-        
-    def get_typeEchange_name(self, obj):
-        queryset = obj.typeEchange
-        return queryset.nom
 
 class TypeEchangeVenteSerializer(ModelSerializer):
     typeEchange_name = SerializerMethodField()
@@ -467,10 +457,11 @@ class BordereauCaisseSerializer(ModelSerializer):
 class CaisseSerializer(ModelSerializer):
     list_bordereau = SerializerMethodField()
     typeEchange_name = SerializerMethodField()
+    pos_name = SerializerMethodField()
     
     class Meta:
         model = CaissePos
-        fields = ['id','pos','typeEchange','typeEchange_name','montant','list_bordereau','is_active','date']
+        fields = ['id','pos','pos_name','typeEchange','typeEchange_name','montant','list_bordereau','is_active','date']
         
     def get_list_bordereau(self, obj):
         queryset = obj.bordereau_in_caisse.filter(is_active = True)
@@ -480,6 +471,24 @@ class CaisseSerializer(ModelSerializer):
     def get_typeEchange_name(self, obj):
         queryset = obj.typeEchange
         return queryset.nom
+    
+    def get_pos_name(self, obj):
+        queryset = obj.pos
+        return queryset.fullName
+    
+# type achat caisse
+    
+class TypeEchangeAchatSerializer(ModelSerializer):
+    # caisse_info = SerializerMethodField()
+    
+    class Meta:
+        model = ListPayAchat
+        fields = ['id','caisse','achat','montant','bordereau','is_active','date']
+        
+    # def get_caisse_info(self, obj):
+    #     queryset = obj.caisse
+    #     serializer = CaisseSerializer(queryset)
+    #     return serializer.data
     
 class PointVenteSerializer(ModelSerializer):
     list_respo = SerializerMethodField()
