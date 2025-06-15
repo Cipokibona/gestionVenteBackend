@@ -59,6 +59,7 @@ class ListProductApprovisionnementSerializer(ModelSerializer):
         )
         productPosDistr.quantity = productPosDistr.quantity - validated_data['quantity']
         productPosDistr.save()
+        # mettre une condition de verification de produit existant
         productPosCible = ProductPointVente(
             pos=approvisionnement.posCible,
             product = validated_data['product'],
