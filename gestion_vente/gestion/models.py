@@ -282,6 +282,7 @@ class CaissePos(models.Model):
 class BordereauCaisse(models.Model):
     caisse = models.ForeignKey(CaissePos, on_delete=models.CASCADE, related_name='bordereau_in_caisse')
     name = models.CharField(max_length=100)
+    montant = models.FloatField()
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
     

@@ -147,7 +147,7 @@ class CaissePosAdmin(admin.ModelAdmin):
     
 @admin.register(BordereauCaisse)
 class BordereauAdmin(admin.ModelAdmin):
-    list_display = ['caisse','name','is_active','date']
+    list_display = ['caisse','name','montant','is_active','date']
   
 # tools  
 @admin.register(ToolsUser)
