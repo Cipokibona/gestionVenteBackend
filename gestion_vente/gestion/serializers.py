@@ -344,6 +344,7 @@ class BasketAgentSerializer(ModelSerializer):
         
     def get_list_product(self, obj):
         queryset = obj.thisproduct_for_basket.filter(is_active = True)
+        # desactiver le panier si la listes des produit est vide
         serializer = BasketListProductSerializer(queryset, many=True)
         return serializer.data
     
