@@ -647,7 +647,10 @@ class UserInfoSerializer(ModelSerializer):
         fields = ['id','username','first_name','last_name','is_agent_commercial','is_admin','is_respo_pos','list_vente','list_depense','list_depense_tools']
         
     def get_list_vente(self, obj):
-        queryset = ListProductVente.objects.filter(list_vente__panier_vente__agent_stock = obj, is_active = True)
+        queryset = ListProductVente.objects.filter(
+            vente__panier__agent = obj,
+            is_active = True
+            )
         serializer = ListProductVenteSerializer(queryset, many = True)
         return serializer.data
     
