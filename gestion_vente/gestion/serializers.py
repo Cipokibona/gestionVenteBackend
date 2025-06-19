@@ -375,12 +375,13 @@ class BasketAgentSerializer(ModelSerializer):
         return queryset.username
         
     def get_list_product(self, obj):
-        queryset = obj.thisproduct_for_basket.filter(is_active = True)
+        queryset_all = obj.thisproduct_for_basket.all()
+        queryset_active = obj.thisproduct_for_basket.filter(is_active = True)
         # desactiver le panier si la listes des produit est vide
-        if not queryset.exists():
+        if not queryset_active.exists() and queryset_all.exists():
             obj.is_active = False
             obj.save()
-        serializer = BasketListProductSerializer(queryset, many=True)
+        serializer = BasketListProductSerializer(queryset_active, many=True)
         return serializer.data
     
     def get_depot_name(self, obj):
