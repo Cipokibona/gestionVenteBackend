@@ -122,6 +122,7 @@ class ProductPointVente(models.Model):
     pos = models.ForeignKey(PointVente, on_delete=models.CASCADE, related_name='product_of_pos')
     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='in_product_pos')
     quantity = models.IntegerField()
+    quantity_max = models.IntegerField()
     prixAchat = models.FloatField()
     prixVente = models.FloatField()
     date_expiration = models.DateTimeField()

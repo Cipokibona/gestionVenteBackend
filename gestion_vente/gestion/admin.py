@@ -104,7 +104,7 @@ class PosteAdmin(admin.ModelAdmin):
     
 @admin.register(ProductPointVente)
 class ProductPointVenteAdmin(admin.ModelAdmin):
-    list_display = ['pos','product','quantity','prixAchat','prixVente','date_expiration','is_active']
+    list_display = ['pos','product','quantity','quantity_max','prixAchat','prixVente','date_expiration','is_active']
     
 @admin.register(ApprovisionnementPos)
 class ApprovisionnementPosAdmin(admin.ModelAdmin):

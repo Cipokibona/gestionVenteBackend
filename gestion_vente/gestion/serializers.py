@@ -53,22 +53,38 @@ class ListProductApprovisionnementSerializer(ModelSerializer):
     
     def create(self, validated_data):
         approvisionnement = validated_data['approvisionnement']
+        # mis a jour de la qte du pos source
         productPosDistr = ProductPointVente.objects.get(
             pos = approvisionnement.posDistributeur,
             product = validated_data['product']
         )
         productPosDistr.quantity = productPosDistr.quantity - validated_data['quantity']
         productPosDistr.save()
-        # mettre une condition de verification de produit existant
-        productPosCible = ProductPointVente(
-            pos=approvisionnement.posCible,
+        # verification si produit existe
+        product_exist = ProductPointVente.objects.filter(
             product = validated_data['product'],
-            quantity = validated_data['quantity'],
             prixAchat = validated_data['prixAchat'],
             prixVente = validated_data['prixVente'],
             date_expiration = validated_data['date_expiration']
-            )
-        productPosCible.save()
+        )
+        if product_exist.exists():
+            data = product_exist.last()
+            data.quantity = data.quantity + validated_data['quantity']
+            # mis a jour pour la quantite max
+            if data.quantity > data.quantity_max:
+                data.quantity_max = data.quantity
+            data.save()
+        else:
+            productPosCible = ProductPointVente(
+                pos=approvisionnement.posCible,
+                product = validated_data['product'],
+                quantity = validated_data['quantity'],
+                quantity_max = validated_data['quantity'],
+                prixAchat = validated_data['prixAchat'],
+                prixVente = validated_data['prixVente'],
+                date_expiration = validated_data['date_expiration']
+                )
+            productPosCible.save()
         
         newProduct = ListProductApprovionnement(
             approvisionnement = approvisionnement,
@@ -95,15 +111,31 @@ class ListProductAchatSerializer(ModelSerializer):
     
     def create(self, validated_data):
         achat = validated_data['achat']
-        productPosCible = ProductPointVente(
-            pos=achat.posCible,
+        # verification si produit existe
+        product_exist = ProductPointVente.objects.filter(
             product = validated_data['product'],
-            quantity = validated_data['quantity'],
             prixAchat = validated_data['prixAchat'],
             prixVente = validated_data['prixVente'],
             date_expiration = validated_data['date_expiration']
-            )
-        productPosCible.save()
+        )
+        if product_exist.exists():
+            data = product_exist.last()
+            data.quantity = data.quantity + validated_data['quantity']
+            # mis a jour pour la quantite max
+            if data.quantity > data.quantity_max:
+                data.quantity_max = data.quantity
+            data.save()
+        else:
+            productPosCible = ProductPointVente(
+                pos=achat.posCible,
+                product = validated_data['product'],
+                quantity = validated_data['quantity'],
+                quantity_max = validated_data['quantity'],
+                prixAchat = validated_data['prixAchat'],
+                prixVente = validated_data['prixVente'],
+                date_expiration = validated_data['date_expiration']
+                )
+            productPosCible.save()
         
         newProduct = ListProductAchat(
             achat = achat,
@@ -668,10 +700,11 @@ class UserInfoSerializer(ModelSerializer):
         return serializer.data
     
 class userSerializer(ModelSerializer):
+    responsable_pos = SerializerMethodField()
     
     class Meta:
         model = User
-        fields = ['id','username','password','email','first_name','last_name','tel','email','imgProfil','is_agent_commercial','is_admin','is_respo_pos','is_active']
+        fields = ['id','username','password','email','first_name','last_name','tel','email','imgProfil','is_agent_commercial','is_admin','is_respo_pos','responsable_pos','is_active']
     
     def create(self, validated_data):
         user = User(
@@ -689,3 +722,8 @@ class userSerializer(ModelSerializer):
         user.save()
         
         return user
+    
+    def get_responsable_pos(self, obj):
+        queryset = obj.respo_POS.filter(is_active = True)
+        serializer = ResponsablePosSerializer(queryset, many=True)
+        return serializer.data
