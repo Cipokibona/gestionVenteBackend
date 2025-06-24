@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from gestion.views import UserAPIView, TypeEchangeView, TauxEchangeView, BasketListView, CustomerView, VenteView, ListProductVenteView, TypeEchangeVenteView, PosteView, BasketAgentView, SalarUserView, DistributeurView, ProductView, PointVenteView, RespoPosView, ApprovisionnementPosView, AchatView, ListProductApprovisionnementView, TypeEchangeApprovView, TypeEchangeAchatView, ListProductAchatView, RendreProduitPosView, ProduitRenduPosView, TypeEchangeRenduPosView, RecouvrementVenteView, CaisseView, ToolsUserView, DepensesView, DepenseSalaireView, DepenseToolsView, BordereauCaisseView, ProductInfoVenteView, ToolsInfoView, UserInfoView, ProductPointVenteView, RequestAgentView
+from gestion.views import UserAPIView, TypeEchangeView, TauxEchangeView, BasketListView, CustomerView, VenteView, ListProductVenteView, TypeEchangeVenteView, PosteView, BasketAgentView, SalarUserView, DistributeurView, ProductView, PointVenteView, RespoPosView, ApprovisionnementPosView, AchatView, ListProductApprovisionnementView, TypeEchangeApprovView, TypeEchangeAchatView, ListProductAchatView, RendreProduitPosView, ProduitRenduPosView, TypeEchangeRenduPosView, RecouvrementVenteView, CaisseView, ToolsUserView, DepensesView, DepenseSalaireView, DepenseToolsView, BordereauCaisseView, ProductInfoVenteView, ToolsInfoView, UserInfoView, ProductPointVenteView, RequestAgentView, RequestProductView
 # , WalletView, TransactionsView, BasketForAgentView
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -80,6 +80,7 @@ router.register('info_depense_tool', ToolsInfoView, basename='info_depense_tool'
 
 # request panier
 router.register('request', RequestAgentView, basename='request')
+router.register('request_product', RequestProductView, basename='request_product')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
