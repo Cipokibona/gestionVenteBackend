@@ -2,7 +2,7 @@ from django.utils import timezone
 from rest_framework.exceptions import NotFound
 from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
 from authentification.models import User
-from gestion.models import TypeEchange, TauxEchange, Products, BasketAgent, BasketListProducts, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente, ProductPointVente, ApprovisionnementPos, Achat, ListProductAchat, ListProductApprovionnement, ListPayApprovisionnementPos, ListPayAchat, ProduitRenduPos, RendreProduitPos, TypeEchangeRenduPos, RecouvrementVente, CaissePos, BordereauCaisse, ToolsUser, Depenses
+from gestion.models import TypeEchange, TauxEchange, Products, BasketAgent, BasketListProducts, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, PointVente, ProductPointVente, ApprovisionnementPos, Achat, ListProductAchat, ListProductApprovionnement, ListPayApprovisionnementPos, ListPayAchat, ProduitRenduPos, RendreProduitPos, TypeEchangeRenduPos, RecouvrementVente, CaissePos, BordereauCaisse, ToolsUser, Depenses, RequestAgent, RequestProduct
 
 
 # class TransactionSerializer(ModelSerializer):
@@ -637,6 +637,40 @@ class DepenseSerializer(ModelSerializer):
         if queryset is not None:
             return queryset.username
         return None
+    
+# request
+class RequestProductSerializer(ModelSerializer):
+    product_name = SerializerMethodField()
+    
+    class Meta:
+        model = RequestProduct
+        fields = ['id','request','product','product_name','quantity','prixVente','date_expiration','is_active','date']
+        
+    def get_product_name(self, obj):
+        queryset = obj.product
+        return queryset.name
+
+class RequestAgentSerializer(ModelSerializer):
+    agent_name = SerializerMethodField()
+    pos_name = SerializerMethodField()
+    list_product = SerializerMethodField()
+    
+    class Meta:
+        model = RequestAgent
+        fields = ['id','agent','agent_name','pos','pos_name','list_product','is_active','date']
+    
+    def get_agent_name(self, obj):
+        queryset = obj.agent
+        return queryset.username
+    
+    def get_pos_name(self, obj):
+        queryset = obj.pos
+        return queryset.fullName
+    
+    def get_list_product(self, obj):
+        queryset = obj.request.filter(is_active = True)
+        serializer = RequestProductSerializer(queryset, many = True)
+        return serializer.data
     
     
 # info sur les produits

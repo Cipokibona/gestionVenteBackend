@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import TauxEchange, TypeEchange, Products, Distributeur, Customer, PointVente, BasketAgent, Vente, ListProductVente, TypeEchangeVente, Poste, BasketListProducts, ResponsablePos, SalaireUser, ProductPointVente, ApprovisionnementPos, Achat,ListProductApprovionnement, ListProductAchat, ListPayAchat, ListPayApprovisionnementPos, RendreProduitPos, ProduitRenduPos,TypeEchangeRenduPos, RecouvrementVente, CaissePos, BordereauCaisse, ToolsUser, Depenses
+from .models import TauxEchange, TypeEchange, Products, Distributeur, Customer, PointVente, BasketAgent, Vente, ListProductVente, TypeEchangeVente, Poste, BasketListProducts, ResponsablePos, SalaireUser, ProductPointVente, ApprovisionnementPos, Achat,ListProductApprovionnement, ListProductAchat, ListPayAchat, ListPayApprovisionnementPos, RendreProduitPos, ProduitRenduPos,TypeEchangeRenduPos, RecouvrementVente, CaissePos, BordereauCaisse, ToolsUser, Depenses, RequestAgent, RequestProduct
 # , BuyProduct, AllProductAchat,  AllWalletBuy, SellProduct, AllProductVente, AllWalletVente, Transaction, WalletTypeBasket
 
 @admin.register(TypeEchange)
@@ -158,3 +158,12 @@ class ToolsUserAdmin(admin.ModelAdmin):
 @admin.register(Depenses)
 class DepensesAdmin(admin.ModelAdmin):
     list_display = ['user','caisse','tool','user_depense','description','montant','is_salaire','is_tool','is_active','date']
+    
+# request
+@admin.register(RequestAgent)
+class RequestAgentAdmin(admin.ModelAdmin):
+    list_display = ['agent','pos','is_active','date']
+    
+@admin.register(RequestProduct)
+class RequestProductAdmin(admin.ModelAdmin):
+    list_display = ['request','product','quantity','prixVente','date_expiration','is_active','date']

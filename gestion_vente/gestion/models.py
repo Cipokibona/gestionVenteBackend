@@ -316,3 +316,19 @@ class ListPayAchat(models.Model):
     bordereau =  models.CharField(max_length=100, null=True)
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True)
+
+# request du panier
+class RequestAgent(models.Model):
+    agent = models.ForeignKey(User, on_delete=models.CASCADE, related_name='request_agent')
+    pos = models.ForeignKey(PointVente, on_delete=models.CASCADE, related_name='request_pos')
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)
+    
+class RequestProduct(models.Model):
+    request = models.ForeignKey(RequestAgent, on_delete=models.CASCADE, related_name='request')
+    product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='request_product')
+    quantity = models.IntegerField()
+    prixVente = models.FloatField()
+    date_expiration = models.DateTimeField()
+    is_active = models.BooleanField(default=True)
+    date = models.DateTimeField(auto_now_add=True)

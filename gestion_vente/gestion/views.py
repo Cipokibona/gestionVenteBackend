@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from authentification.models import User
-from gestion.models import TypeEchange,  TauxEchange,BasketListProducts, BasketAgent, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, Products, PointVente, ApprovisionnementPos, Achat, ListProductApprovionnement, ListPayAchat, ListPayApprovisionnementPos, ListProductAchat, RendreProduitPos, ProduitRenduPos, TypeEchangeRenduPos, RecouvrementVente, CaissePos, ToolsUser, Depenses, BordereauCaisse, ProductPointVente
+from gestion.models import TypeEchange,  TauxEchange,BasketListProducts, BasketAgent, Customer, ListProductVente, TypeEchangeVente, Vente, Poste, SalaireUser, ResponsablePos, Distributeur, Products, PointVente, ApprovisionnementPos, Achat, ListProductApprovionnement, ListPayAchat, ListPayApprovisionnementPos, ListProductAchat, RendreProduitPos, ProduitRenduPos, TypeEchangeRenduPos, RecouvrementVente, CaissePos, ToolsUser, Depenses, BordereauCaisse, ProductPointVente, RequestAgent
 # , Wallet, Transaction
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from .serializers import userSerializer, TauxEchangeSerializer, TypeEchangeSerializer, BasketListProductSerializer, CustomerSerializer, VenteSerializer, ListProductVenteSerializer, TypeEchangeVenteSerializer, PosteSerializer, BasketAgentSerializer, SalarUserSerializer, DistributeurSerializer, ProductSerializer, PointVenteSerializer, ResponsablePosSerializer, AchatSerializer, ApprovisionnementPosSerializer, ListProductApprovisionnementSerializer, TypeEchangeApprovSerializer, TypeEchangeAchatSerializer, ListProductAchatSerializer, RendreProduitPosSerializer, ProduitRenduPosSerializer, TypeEchangeRenduPosSerializer, RecouvrementVenteSerializer, CaisseSerializer, ToolsUserSerializer, DepenseSerializer, BordereauCaisseSerializer, ProductInfoVenteSerializer, ToolsInfoSerializer, UserInfoSerializer, ProductPointVenteSerializer
+from .serializers import userSerializer, TauxEchangeSerializer, TypeEchangeSerializer, BasketListProductSerializer, CustomerSerializer, VenteSerializer, ListProductVenteSerializer, TypeEchangeVenteSerializer, PosteSerializer, BasketAgentSerializer, SalarUserSerializer, DistributeurSerializer, ProductSerializer, PointVenteSerializer, ResponsablePosSerializer, AchatSerializer, ApprovisionnementPosSerializer, ListProductApprovisionnementSerializer, TypeEchangeApprovSerializer, TypeEchangeAchatSerializer, ListProductAchatSerializer, RendreProduitPosSerializer, ProduitRenduPosSerializer, TypeEchangeRenduPosSerializer, RecouvrementVenteSerializer, CaisseSerializer, ToolsUserSerializer, DepenseSerializer, BordereauCaisseSerializer, ProductInfoVenteSerializer, ToolsInfoSerializer, UserInfoSerializer, ProductPointVenteSerializer, RequestAgentSerializer
 # , TransactionSerializer, BasketForAgentSerializer, WalletSerializer
 
 class UserAPIView(ModelViewSet):
@@ -257,3 +257,10 @@ class UserInfoView(ModelViewSet):
     
     def get_queryset(self):
         return User.objects.filter(is_active = True)
+    
+# request panier
+class RequestAgentView(ModelViewSet):
+    serializer_class = RequestAgentSerializer
+    
+    def get_queryset(self):
+        return RequestAgent.objects.filter(is_active = True)
