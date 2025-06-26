@@ -433,7 +433,7 @@ class ProductPointVenteSerializer(ModelSerializer):
     
     class Meta:
         model = ProductPointVente
-        fields = ['id','pos','product','product_name','quantity','prixAchat','prixVente','date_expiration','is_active']
+        fields = ['id','pos','product','product_name','quantity','quantity_max','prixAchat','prixVente','date_expiration','is_active']
         
     def get_product_name(self, obj):
         queryset = obj.product
