@@ -58,7 +58,7 @@ class CustomerView(ModelViewSet):
     serializer_class = CustomerSerializer
     
     def get_queryset(self):
-        return Customer.objects.filter(is_active = True)
+        return Customer.objects.filter(is_active = True).order_by('fullName')
     
 class VenteView(ModelViewSet):
     serializer_class = VenteSerializer
@@ -116,20 +116,20 @@ class DistributeurView(ModelViewSet):
     serializer_class = DistributeurSerializer
     
     def get_queryset(self):
-        return Distributeur.objects.filter(is_active = True)
+        return Distributeur.objects.filter(is_active = True).order_by('name')
     
 class ProductView(ModelViewSet):
     serializer_class = ProductSerializer
     
     def get_queryset(self):
-        return Products.objects.filter(is_active = True)
+        return Products.objects.filter(is_active = True).order_by('name')
     
     
 class PointVenteView(ModelViewSet):
     serializer_class = PointVenteSerializer
     
     def get_queryset(self):
-        return PointVente.objects.filter(is_active = True)
+        return PointVente.objects.filter(is_active = True).order_by('fullName')
     
     
 class RespoPosView(ModelViewSet):
@@ -150,7 +150,7 @@ class AchatView(ModelViewSet):
     serializer_class = AchatSerializer
     
     def get_queryset(self):
-        return Achat.objects.filter(is_active = True)
+        return Achat.objects.filter(is_active = True).order_by('-date')
     
 class ListProductApprovisionnementView(ModelViewSet):
     serializer_class = ListProductApprovisionnementSerializer
@@ -208,14 +208,14 @@ class ToolsUserView(ModelViewSet):
     serializer_class = ToolsUserSerializer
     
     def get_queryset(self):
-        return ToolsUser.objects.filter(is_active = True)
+        return ToolsUser.objects.filter(is_active = True).order_by('name')
 
 # Depenses
 class DepensesView(ModelViewSet):
     serializer_class = DepenseSerializer
     
     def get_queryset(self):
-        return Depenses.objects.filter(is_active = True)
+        return Depenses.objects.filter(is_active = True).order_by('-date')
     
 class DepenseSalaireView(ModelViewSet):
     serializer_class = DepenseSerializer
