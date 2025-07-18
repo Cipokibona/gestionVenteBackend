@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Environnement virtuel (ex: venv, env)
+env/
+venv/
+ENV/
+.venv/
+.ENV/
+
+# Fichiers de configuration sensible
+*.env
+.env
+
+# SQLite database
+db.sqlite3
+
+# Fichiers de migration
+*.log
+*.pot
+*.pyc
+*.pyo
+*.db
+
+# Dossier de migrations compilés
+*/migrations/__pycache__/
+*/__pycache__/
+
+# Static & media files (si générés dynamiquement)
+staticfiles/
+media/
+
+# JetBrains / VSCode
+.idea/
+.vscode/
+
+# macOS / Windows
+.DS_Store
+Thumbs.db
